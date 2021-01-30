@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">Project_1_Menu_Maker</string>
+    <string name="app_name">Menu Maker</string>
+    <string name="titleOfAppRes">Menu Planner</string>
+    <string name="usernameRes">Username</string>
+    <string name="passwordRes">Password</string>
+    <string name="loginRes">Login</string>
+    <string name="homeMsgRes">Welcome To Your Menu</string>
+    <string name="searchRecipeBtnRes">Search For Recipes</string>
+    <string name="displayHomeBtnRes">Display My Recipes</string>
+    <string name="logoutHomeBtnRes">Logout</string>
 </resources>
