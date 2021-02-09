@@ -2,51 +2,57 @@ package com.example.project_1_menu_maker;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.project_1_menu_maker.db.AppDatabase;
+import com.example.project_1_menu_maker.db.UserDAO;
+import com.example.project_1_menu_maker.models.User;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
     private static final String USER_ID_KEY = "com.example.account.db.userIdKey";
 
-    private EditText mUsername;
+    private EditText mUsernameField;
     private String mUsernameString;
-    private EditText mPassword;
+    private EditText mPasswordField;
     private String mPasswordString;
 
-    // private User mUser;
+    private User mUser;
+    private UserDAO mUserDAO;
 
     Button button;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mUsername = findViewById(R.id.usernameInput);
-        mPassword = findViewById(R.id.passwordInput);
-
-        button = findViewById(R.id.button);
-
         getDatabase();
+
+        wireUp();
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                getValuesFromDisplay();
                 if(checkForUser()){ // user exists
                     if(validatePassword()){ // password is correct
                         // passing current user id to home activity, must be passed along to search and display activities when clicked from home
-//                        Intent intent = HomeActivity.intentFactory(getApplicationContext(), -1/* mUser.getUserId() */);
-//                        startActivity(intent);
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                        Intent intent = HomeActivity.intentFactory(getApplicationContext(), mUser.getUserId() );
+                        startActivity(intent);
 
                     } else { // password is incorrect
                         snackMaker("Invalid Password");
@@ -76,22 +82,32 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private void wireUp(){
+        mUsernameField = findViewById(R.id.usernameInput);
+        mPasswordField = findViewById(R.id.passwordInput);
+        button = findViewById(R.id.button);
+
+    }
+
+    private void getValuesFromDisplay(){
+        mPasswordString = mPasswordField.getText().toString();
+        mUsernameString = mUsernameField.getText().toString();
+        Log.d("User Attempt ", mUsernameString);
+        Log.d("User Pass ", mPasswordString);
+    }
+
     private boolean checkForUser(){
-        mUsernameString = mUsername.getText().toString();
-        /* something like
-        mUser = mUsersDAO.getUserByUsername(mUsernameString);
-         */
+        mUser = mUserDAO.getUserByUsername(mUsernameString);
 
-        return false;
+        if(mUser == null){
+            mUsernameField.setError("Invalid Username");
+            Log.e("Wrong User/Null User", "Dumb error");
+            return false;
+        }
+        return true;
     }
 
-    private boolean validatePassword(){
-        /* something like
-        return mUser.getUserPassword().equals(mPasswordString);
-         */
-
-        return false;
-    }
+    private boolean validatePassword(){ return mUser.getPassword().equals(mPasswordString); }
 
     private void snackMaker(String message){
         Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutLoginActivity), message, Snackbar.LENGTH_SHORT);
@@ -99,15 +115,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void getDatabase(){
-        /* something like
-        mUserDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME).allowMainThreadQueries().build().getUserDAO();
-         */
+        mUserDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME)
+                .allowMainThreadQueries()
+                .build()
+                .getUserDAO();
     }
 
     // to send the userId to the menu adder section so we can add recipes to an account db
-    public static Intent intentFactory(Context context, int userId){
+    public static Intent intentFactory(Context context){
         Intent intent = new Intent(context, LoginActivity.class);
-        intent.putExtra(USER_ID_KEY, userId);
         return intent;
     }
 }
