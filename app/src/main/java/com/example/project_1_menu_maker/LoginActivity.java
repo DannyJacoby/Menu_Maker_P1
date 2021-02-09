@@ -44,48 +44,44 @@ public class LoginActivity extends AppCompatActivity {
 
         wireUp();
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getValuesFromDisplay();
-                if(checkForUser()){ // user exists
-                    if(validatePassword()){ // password is correct
-                        // passing current user id to home activity, must be passed along to search and display activities when clicked from home
-                        Intent intent = HomeActivity.intentFactory(getApplicationContext(), mUser.getUserId() );
-                        startActivity(intent);
-
-                    } else { // password is incorrect
-                        snackMaker("Invalid Password");
-                    }
-                } else { // user doesn't exist
-                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(findViewById(R.id.layoutLoginActivity).getContext());
-                    alertBuilder.setMessage("No user found, create an account?");
-
-                    alertBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = SignupActivity.intentFactory(getApplicationContext());
-                            startActivity(intent);
-                        }
-                    });
-                    alertBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            snackMaker("You clicked No");
-                        }
-                    });
-
-                    alertBuilder.create().show();
-                }
-            }
-        });
-
     }
 
     private void wireUp(){
         mUsernameField = findViewById(R.id.usernameInput);
         mPasswordField = findViewById(R.id.passwordInput);
         button = findViewById(R.id.button);
+        button.setOnClickListener(v -> {
+            getValuesFromDisplay();
+            if(checkForUser()){ // user exists
+                if(validatePassword()){ // password is correct
+                    // passing current user id to home activity, must be passed along to search and display activities when clicked from home
+                    Intent intent = HomeActivity.intentFactory(getApplicationContext(), mUser.getUserId() );
+                    startActivity(intent);
+
+                } else { // password is incorrect
+                    snackMaker("Invalid Password");
+                }
+            } else { // user doesn't exist
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(findViewById(R.id.layoutLoginActivity).getContext());
+                alertBuilder.setMessage("No user found, create an account?");
+
+                alertBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = SignupActivity.intentFactory(getApplicationContext());
+                        startActivity(intent);
+                    }
+                });
+                alertBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        snackMaker("You clicked No");
+                    }
+                });
+
+                alertBuilder.create().show();
+            }
+        });
 
     }
 
