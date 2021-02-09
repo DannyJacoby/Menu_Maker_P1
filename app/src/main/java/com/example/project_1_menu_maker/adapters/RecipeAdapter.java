@@ -1,7 +1,9 @@
 package com.example.project_1_menu_maker.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Parcel;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +16,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.project_1_menu_maker.DisplayActivity;
 import com.example.project_1_menu_maker.R;
 import com.example.project_1_menu_maker.models.Recipe;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -78,6 +83,17 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
             Log.d("Image", "bind: "+ ImageUrl);
             Glide.with(context).load(ImageUrl).into(ivThumb);
+
+            container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(context, DisplayActivity.class);
+                    i.putExtra("recipe", Parcels.wrap(recipe));
+                    context.startActivity(i);
+
+                    
+                }
+            });
 
 
         }
