@@ -88,8 +88,6 @@ public class LoginActivity extends AppCompatActivity {
     private void getValuesFromDisplay(){
         mPasswordString = mPasswordField.getText().toString();
         mUsernameString = mUsernameField.getText().toString();
-        Log.d("User Attempt ", mUsernameString);
-        Log.d("User Pass ", mPasswordString);
     }
 
     private boolean checkForUser(){
