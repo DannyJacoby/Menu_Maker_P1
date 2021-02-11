@@ -8,8 +8,6 @@ import com.example.project_1_menu_maker.db.AppDatabase;
 
 import java.util.Objects;
 
-
-
 @Entity(tableName = AppDatabase.USER_TABLE)
 public class User {
 

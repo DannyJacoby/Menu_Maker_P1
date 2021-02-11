@@ -2,6 +2,7 @@ package com.example.project_1_menu_maker;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.project_1_menu_maker.db.AppDatabase;
+import com.example.project_1_menu_maker.db.UserDAO;
+import com.example.project_1_menu_maker.models.User;
 import com.google.android.material.snackbar.Snackbar;
 
 public class HomeActivity extends AppCompatActivity {
@@ -19,12 +23,13 @@ public class HomeActivity extends AppCompatActivity {
     private Button mDisplayBtn;
     private Button mLogoutBtn;
 
-    // private User mUser;
+    private User mUser;
+    private UserDAO mUserDAO;
     private int mUserId = -1;
-    private static final String USER_ID_KEY = "com.example.users.db.userIdKey";
+    private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
 
     private SharedPreferences mPreferences = null;
-    private static final String PREFERENCES_KEY = "com.example.users.db.preferences_key";
+    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
 
 
     @Override
@@ -48,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
+                intent.putExtra(USER_ID_KEY, mUserId);
                 startActivity(intent);
             }
         });
@@ -142,9 +148,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void getDatabase(){
-        /* something like
         mUserDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME).allowMainThreadQueries().build().getUserDAO();
-         */
+
     }
 
     public static Intent intentFactory(Context context, int userId){

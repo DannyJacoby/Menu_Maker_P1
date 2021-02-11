@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.project_1_menu_maker.db.AppDatabase;
+import com.example.project_1_menu_maker.db.RecipeDAO;
 import com.example.project_1_menu_maker.db.UserDAO;
 import com.example.project_1_menu_maker.models.User;
 import com.google.android.material.snackbar.Snackbar;
@@ -30,15 +31,16 @@ public class MainActivity extends AppCompatActivity {
     private UserDAO mUserDAO;
     private int mUserId = -1;
 
-    private SharedPreferences mPreferences = null;
+    private RecipeDAO mRecipeDAO;
 
+    private SharedPreferences mPreferences = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getUserDatabase();
+        getDatabase();
 
         checkForUser();
 
@@ -74,11 +76,12 @@ public class MainActivity extends AppCompatActivity {
         if(users.size() <= 0){
             User defaultUser = new User("default", "default");
             mUserDAO.insert(defaultUser);
+
         }
 
-        // Go to Login Screen
-        Intent intent = LoginActivity.intentFactory(this);
-        startActivity(intent);
+//        // Go to Login Screen // don't need this since we have a login/sign up btn
+//        Intent intent = LoginActivity.intentFactory(this);
+//        startActivity(intent);
     }
 
     private void loginUser(int userId) { mUser = mUserDAO.getUserByUserId(userId); }
@@ -125,12 +128,9 @@ public class MainActivity extends AppCompatActivity {
         snackBar.show();
     }
 
-    private void getUserDatabase(){
+    private void getDatabase(){
         mUserDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME).allowMainThreadQueries().build().getUserDAO();
-    }
-
-    private void getRecipeDatabase(){
-
+        mRecipeDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME).allowMainThreadQueries().build().getRecipeDAO();
     }
 
     public static Intent intentFactory(Context context){
