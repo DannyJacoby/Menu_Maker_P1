@@ -50,9 +50,9 @@ public class SearchActivity extends AppCompatActivity {
     Button btRandom;
     EditText etKeyword;
     Button btA, btB, btC, btD, btE, btF, btG, btH, btI, btJ, btK, btL, btM, btN, btO, btP, btQ, btR, btS, btT, btU, btV, btW, btX, btY, btZ;
-    String[] a = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+    String[] a = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
-    private int mUserId;// = getIntent().getIntExtra("com.example.project_1_menu_maker.db.userIdKey", -1);
+    private int mUserId;
     private UserDAO mUserDAO;
     private RecipeDAO mRecipeDAO;
 
@@ -69,9 +69,49 @@ public class SearchActivity extends AppCompatActivity {
         Log.e("User ID Coming into Search", String.valueOf(getIntent().getIntExtra(USER_ID_KEY, -1)));
 
         checkForUser();
+        getDatabase();
 
         RecyclerView rmRecipes = findViewById(R.id.rvRecipes);
         recipes = new ArrayList<>();
+
+        final RecipeAdapter recipeAdapter = new RecipeAdapter(this, recipes);
+
+        rmRecipes.setAdapter(recipeAdapter);
+
+        rmRecipes.setLayoutManager(new LinearLayoutManager(this));
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(BASE_URL, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.d(TAG, "onSuccess");
+                JSONObject jsonObject = json.jsonObject;
+                try {
+                    JSONArray results = jsonObject.getJSONArray("meals");
+                    Log.i(TAG, "Result: " + results.toString());
+
+                    recipes.addAll(Recipe.fromJsonArray(results));
+
+                    recipeAdapter.notifyDataSetChanged();
+                    Log.i(TAG, "Recipes: " + recipes.size());
+                } catch (JSONException e) {
+                    Log.e(TAG, "Hit json exception" + e);
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.d(TAG, "onFailure");
+            }
+        });
+
+        buttonWireUp(recipeAdapter, client); // Replace this with the internals of this function if we need to put all buttons back into onCreate
+
+    }
+
+    private void buttonWireUp(RecipeAdapter recipeAdapter, AsyncHttpClient client){
+
         btSearch = findViewById(R.id.btSearch);
         etKeyword = findViewById(R.id.etKeyword);
         btRandom = findViewById(R.id.btRandom);
@@ -102,39 +142,6 @@ public class SearchActivity extends AppCompatActivity {
         btY = findViewById(R.id.btY);
         btZ = findViewById(R.id.btZ);
 
-        final RecipeAdapter recipeAdapter = new RecipeAdapter(this, recipes);
-
-        rmRecipes.setAdapter(recipeAdapter);
-
-        rmRecipes.setLayoutManager(new LinearLayoutManager(this));
-
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(BASE_URL, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                Log.d(TAG, "onSuccess");
-                JSONObject jsonObject = json.jsonObject;
-                try {
-                    JSONArray results = jsonObject.getJSONArray("meals");
-                    Log.i(TAG, "Result: " + results.toString());
-//                    if(mUserId == -1) mUserId = 1;
-
-                    recipes.addAll(Recipe.fromJsonArray(results));
-
-                    recipeAdapter.notifyDataSetChanged();
-                    Log.i(TAG, "Recipes: "+ recipes.size());
-                } catch (JSONException e) {
-                    Log.e(TAG, "Hit json exception" + e);
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.d(TAG, "onFailure");
-            }
-        });
-
         btSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -150,10 +157,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the keyword: "+ etKeyword.getText(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the keyword: " + etKeyword.getText(), Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -188,6 +195,7 @@ public class SearchActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
+
                     @Override
                     public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                         Log.d(TAG, "onFailure");
@@ -211,10 +219,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "A", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "A", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -242,10 +250,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "B", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "B", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -273,10 +281,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "C", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "C", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -304,10 +312,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "D", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "D", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -335,10 +343,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "E", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "E", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -366,10 +374,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "F", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "F", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -397,10 +405,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "G", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "G", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -428,10 +436,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "H", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "H", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -459,10 +467,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "I", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "I", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -490,10 +498,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "J", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "J", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -521,10 +529,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "K", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "K", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -552,10 +560,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "L", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "L", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -583,10 +591,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "M", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "M", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -614,10 +622,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "N", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "N", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -645,10 +653,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "O", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "O", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -676,10 +684,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "P", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "P", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -707,10 +715,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "Q", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "Q", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -738,10 +746,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "R", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "R", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -769,10 +777,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "S", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "S", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -800,10 +808,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "T", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "T", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -831,10 +839,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "U", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "U", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -862,10 +870,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "V", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "V", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -893,10 +901,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "W", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "W", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -924,10 +932,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "X", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "X", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -955,10 +963,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "Y", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "Y", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -986,10 +994,10 @@ public class SearchActivity extends AppCompatActivity {
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
                             recipeAdapter.notifyDataSetChanged();
-                            Log.i(TAG, "Recipes: "+ recipes.size());
+                            Log.i(TAG, "Recipes: " + recipes.size());
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
-                            Toast.makeText(SearchActivity.this, "No meals with the letter: "+ "Z", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, "No meals with the letter: " + "Z", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -1001,24 +1009,32 @@ public class SearchActivity extends AppCompatActivity {
                 });
             }
         });
-  
-    private void checkForUser(){
+    }
+
+    private void checkForUser() {
         mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
 
-        if(mUserId != -1){ return; }
+        if (mUserId != -1) {
+            return;
+        }
 
-        if(mPreferences == null){ getPrefs(); }
+        if (mPreferences == null) {
+            getPrefs();
+        }
         mUserId = mPreferences.getInt(USER_ID_KEY, -1);
 
-        if(mUserId != -1){ return; }
-        else {
+        if (mUserId != -1) {
+            return;
+        } else {
             Log.e("Not Passing in any user in intent", String.valueOf(mUserId));
         }
     }
 
-    private void loginUser(int userId) { mUser = mUserDAO.getUserByUserId(userId); }
+    private void loginUser ( int userId){
+        mUser = mUserDAO.getUserByUserId(userId);
+    }
 
-    private void logoutUser(){
+    private void logoutUser () {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
 
         alertBuilder.setMessage("Logout?");
@@ -1038,10 +1054,12 @@ public class SearchActivity extends AppCompatActivity {
         alertBuilder.create().show();
     }
 
-    private void getPrefs(){ mPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE); }
+    private void getPrefs () {
+        mPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
+    }
 
-    private void addUserToPrefs(int userId){
-        if(mPreferences == null){
+    private void addUserToPrefs ( int userId){
+        if (mPreferences == null) {
             getPrefs();
         }
         SharedPreferences.Editor editor = mPreferences.edit();
@@ -1049,25 +1067,29 @@ public class SearchActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    private void clearUserFromPrefs(){ addUserToPrefs(-1); }
+    private void clearUserFromPrefs () {
+        addUserToPrefs(-1);
+    }
 
-    private void clearUserFromIntent(){ getIntent().putExtra(USER_ID_KEY, -1); }
+    private void clearUserFromIntent () {
+        getIntent().putExtra(USER_ID_KEY, -1);
+    }
 
-    private void snackMaker(String message){
+    private void snackMaker (String message){
         Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutActivityMain),
                 message,
                 Snackbar.LENGTH_SHORT);
         snackBar.show();
     }
 
-    private void getDatabase(){
+    private void getDatabase () {
         mUserDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME).allowMainThreadQueries().build().getUserDAO();
     }
 
-    public static Intent intentFactory(Context context, int userId){
+    public static Intent intentFactory (Context context, int userId){
         Intent intent = new Intent(context, SearchActivity.class);
         intent.putExtra(USER_ID_KEY, userId);
         return intent;
     }
-  
+
 }
