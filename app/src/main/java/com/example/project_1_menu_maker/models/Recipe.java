@@ -20,6 +20,8 @@ public class Recipe {
     String Ingredients = "";
     String Instruction;
 
+    public Recipe(){}
+
     public Recipe( JSONObject jsonObject) throws JSONException {
         MealId = jsonObject.getInt("idMeal");
         Title = jsonObject.getString("strMeal");
@@ -68,8 +70,7 @@ public class Recipe {
         return Ingredients;
     }
 
-    public String getInstruction(){
-        return Instruction;
+    public String getInstruction() { return Instruction; }
 
     @Override
     public boolean equals(Object o) {
@@ -80,12 +81,13 @@ public class Recipe {
                 Objects.equals(Title, recipe.Title) &&
                 Objects.equals(Category, recipe.Category) &&
                 Objects.equals(MealThumb, recipe.MealThumb) &&
-                Objects.equals(Area, recipe.Area);
+                Objects.equals(Area, recipe.Area) &&
+                Objects.equals(Ingredients, recipe.Ingredients) &&
+                Objects.equals(Instruction, recipe.Instruction);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(MealId, /*mUserId,*/ Title, Category, MealThumb, Area);
-
+        return Objects.hash(MealId, Title, Category, MealThumb, Area, Ingredients, Instruction);
     }
 }

@@ -16,6 +16,8 @@ public class Recipes {
     private String category;
     private String mealThumb;
     private String area;
+    private String ingredients;
+    private String instruction;
 
     public Recipes(int userId, int menuId, String title, String category, String mealThumb, String area) {
         this.userId = userId;
@@ -66,6 +68,20 @@ public class Recipes {
     }
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public String getIngredients() {
+        return ingredients;
+    }
+    public void setIngredients(String ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public String getInstruction() {
+        return instruction;
+    }
+    public void setInstruction(String instruction) {
+        this.instruction = instruction;
     }
 
     @Override
