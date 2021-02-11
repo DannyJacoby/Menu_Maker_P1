@@ -3,10 +3,12 @@ package com.example.project_1_menu_maker.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Parcel
 public class Recipe {
 
     int MealId;
@@ -14,6 +16,8 @@ public class Recipe {
     String Category;
     String MealThumb;
     String Area;
+    String Ingredients = "";
+    String Instruction;
 
     public Recipe() {}
 
@@ -24,6 +28,14 @@ public class Recipe {
         Category = jsonObject.getString("strCategory");
         Area = jsonObject.getString("strArea");
         MealThumb = jsonObject.getString("strMealThumb");
+        for (int i = 1; i < 21; i++){
+            if (jsonObject.getString("strIngredient"+String.valueOf(i)).equals("")){
+                break;
+            }
+            Ingredients += jsonObject.getString("strIngredient"+String.valueOf(i)) + "   " +  jsonObject.getString("strMeasure"+String.valueOf(i)) + "\n";
+        }
+        Instruction = jsonObject.getString("strInstructions");
+
     }
 
     public static List<Recipe> fromJsonArray(JSONArray recipeJsonArray) throws JSONException {
@@ -52,5 +64,13 @@ public class Recipe {
 
     public String getArea() {
         return Area;
+    }
+
+    public String getIngredients() {
+        return Ingredients;
+    }
+
+    public String getInstruction(){
+        return Instruction;
     }
 }
