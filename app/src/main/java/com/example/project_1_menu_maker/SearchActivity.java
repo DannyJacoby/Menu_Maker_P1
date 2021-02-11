@@ -1,11 +1,14 @@
 package com.example.project_1_menu_maker;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +19,12 @@ import android.widget.Toast;
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.project_1_menu_maker.adapters.RecipeAdapter;
+import com.example.project_1_menu_maker.db.AppDatabase;
+import com.example.project_1_menu_maker.db.RecipeDAO;
+import com.example.project_1_menu_maker.db.User;
+import com.example.project_1_menu_maker.db.UserDAO;
 import com.example.project_1_menu_maker.models.Recipe;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +38,8 @@ import okhttp3.Headers;
 
 public class SearchActivity extends AppCompatActivity {
 
+    private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
+    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
     public static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/search.php?s=";
     public static final String RANDOM_URL = "https://www.themealdb.com/api/json/v1/1/random.php/";
     public static final String LETTER_URL = "https://www.themealdb.com/api/json/v1/1/search.php?f=";
@@ -42,12 +52,24 @@ public class SearchActivity extends AppCompatActivity {
     Button btA, btB, btC, btD, btE, btF, btG, btH, btI, btJ, btK, btL, btM, btN, btO, btP, btQ, btR, btS, btT, btU, btV, btW, btX, btY, btZ;
     String[] a = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 
-//    private int mUserId = getIntent().getIntExtra("com.example.project_1_menu_maker.db.userIdKey", -1);
+    private int mUserId;// = getIntent().getIntExtra("com.example.project_1_menu_maker.db.userIdKey", -1);
+    private UserDAO mUserDAO;
+    private RecipeDAO mRecipeDAO;
+
+    private SharedPreferences mPreferences = null;
+
+    private User mUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        Log.e("User ID Coming into Search", String.valueOf(getIntent().getIntExtra(USER_ID_KEY, -1)));
+
+        checkForUser();
+
         RecyclerView rmRecipes = findViewById(R.id.rvRecipes);
         recipes = new ArrayList<>();
         btSearch = findViewById(R.id.btSearch);
@@ -979,13 +1001,72 @@ public class SearchActivity extends AppCompatActivity {
                 });
             }
         });
+  
+    private void checkForUser(){
+        mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
 
+        if(mUserId != -1){ return; }
 
+        if(mPreferences == null){ getPrefs(); }
+        mUserId = mPreferences.getInt(USER_ID_KEY, -1);
+
+        if(mUserId != -1){ return; }
+        else {
+            Log.e("Not Passing in any user in intent", String.valueOf(mUserId));
+        }
+    }
+
+    private void loginUser(int userId) { mUser = mUserDAO.getUserByUserId(userId); }
+
+    private void logoutUser(){
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+
+        alertBuilder.setMessage("Logout?");
+
+        alertBuilder.setPositiveButton("Yes", (dialog, which) -> {
+            clearUserFromIntent();
+            clearUserFromPrefs();
+            mUserId = -1;
+            checkForUser();
+        });
+
+        alertBuilder.setNegativeButton("No", (dialog, which) -> {
+            //Don't need to do anything here
+            snackMaker("You clicked NO");
+        });
+
+        alertBuilder.create().show();
+    }
+
+    private void getPrefs(){ mPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE); }
+
+    private void addUserToPrefs(int userId){
+        if(mPreferences == null){
+            getPrefs();
+        }
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putInt(USER_ID_KEY, userId);
+        editor.apply();
+    }
+
+    private void clearUserFromPrefs(){ addUserToPrefs(-1); }
+
+    private void clearUserFromIntent(){ getIntent().putExtra(USER_ID_KEY, -1); }
+
+    private void snackMaker(String message){
+        Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutActivityMain),
+                message,
+                Snackbar.LENGTH_SHORT);
+        snackBar.show();
+    }
+
+    private void getDatabase(){
+        mUserDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME).allowMainThreadQueries().build().getUserDAO();
     }
 
     public static Intent intentFactory(Context context, int userId){
-        Intent intent = new Intent(context, LoginActivity.class);
-        intent.putExtra("com.example.project_1_menu_maker.db.userIdKey", userId);
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.putExtra(USER_ID_KEY, userId);
         return intent;
     }
   

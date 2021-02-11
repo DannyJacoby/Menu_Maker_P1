@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -20,27 +21,29 @@ import com.google.android.material.snackbar.Snackbar;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
+    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
+
     private Button mSearchBtn;
     private Button mDisplayBtn;
     private Button mLogoutBtn;
 
     private User mUser;
-    private UserDAO mUserDAO;
     private int mUserId = -1;
-    private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
+    private UserDAO mUserDAO;
 
     private SharedPreferences mPreferences = null;
-    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        getDatabase();
+
         wireUp();
 
-        getDatabase();
+        Log.e("User ID Coming into Home", String.valueOf(getIntent().getIntExtra(USER_ID_KEY, -1)));
 
     }
 
@@ -50,11 +53,13 @@ public class HomeActivity extends AppCompatActivity {
         mDisplayBtn = findViewById(R.id.displayHomeBtn);
         mLogoutBtn = findViewById(R.id.logoutHomeBtn);
 
+        checkForUser();
+
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
-                intent.putExtra(USER_ID_KEY, mUserId);
+                // NOTE not actually putting int into intent here FOR SOME REASON
+                Intent intent = SearchActivity.intentFactory(getApplicationContext(), mUserId);
                 startActivity(intent);
             }
         });
@@ -75,6 +80,8 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    private void loginUser(int userId) { mUser = mUserDAO.getUserByUserId(userId); }
+
     private void logoutUser(){
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
 
@@ -86,7 +93,7 @@ public class HomeActivity extends AppCompatActivity {
                 clearUserFromIntent();
                 clearUserFromPref();
                 mUserId = -1;
-                checkForUsers();
+                checkForUser();
             }
         });
 
@@ -100,12 +107,13 @@ public class HomeActivity extends AppCompatActivity {
         alertBuilder.create().show();
     }
 
-    private void checkForUsers(){
+    private void checkForUser(){
         mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
 
         // taken from GymLog
         // do we have a user in preferences?
         if(mUserId != -1){
+            loginUser(mUserId);
             return;
         }
         if(mPreferences == null){
@@ -113,6 +121,7 @@ public class HomeActivity extends AppCompatActivity {
         }
         mUserId = mPreferences.getInt(USER_ID_KEY, -1);
         if(mUserId != -1){
+            loginUser(mUserId);
             return;
         }
 

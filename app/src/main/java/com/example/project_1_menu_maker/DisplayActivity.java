@@ -25,8 +25,8 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONObject;
 
 public class DisplayActivity extends AppCompatActivity {
-
     private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
+    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
 
     TextView tvMealTitle;
     ImageView ivImage;
@@ -94,7 +94,7 @@ public class DisplayActivity extends AppCompatActivity {
 
     public static Intent intentFactory(Context context, int userId){
         Intent intent = new Intent(context, LoginActivity.class);
-        intent.putExtra("com.example.project_1_menu_maker.db.userIdKey", userId);
+        intent.putExtra(USER_ID_KEY, userId);
         return intent;
     }
 
