@@ -41,8 +41,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         getDatabase();
-
+//        getPrefs();
         checkForUser();
+
+
 
         btLogin = findViewById(R.id.btLogin);
         btSignUp = findViewById(R.id.btSignup);
@@ -75,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(users.size() <= 0){
             User defaultUser = new User("default", "default");
-            mUserDAO.insert(defaultUser);
-
+            User altDeftUser = new User("altdeft", "altdeft");
+            mUserDAO.insert(defaultUser, altDeftUser);
         }
 
 //        // Go to Login Screen // don't need this since we have a login/sign up btn
