@@ -36,7 +36,7 @@ public class SearchActivity extends AppCompatActivity {
     Button btSearch;
     EditText etKeyword;
 
-    private int mUserId = getIntent().getIntExtra("com.example.project_1_menu_maker.db.userIdKey", -1);
+//    private int mUserId = getIntent().getIntExtra("com.example.project_1_menu_maker.db.userIdKey", -1);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +61,9 @@ public class SearchActivity extends AppCompatActivity {
                 try {
                     JSONArray results = jsonObject.getJSONArray("meals");
                     Log.i(TAG, "Result: " + results.toString());
-                    if(mUserId == -1) mUserId = 1;
+//                    if(mUserId == -1) mUserId = 1;
 
-                    recipes.addAll(Recipe.fromJsonArray(/*mUserId,*/ results));
+                    recipes.addAll(Recipe.fromJsonArray(results));
 
                     recipeAdapter.notifyDataSetChanged();
                     Log.i(TAG, "Recipes: "+ recipes.size());
