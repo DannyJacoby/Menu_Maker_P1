@@ -1,14 +1,10 @@
-package com.example.project_1_menu_maker.models;
+package com.example.project_1_menu_maker.db;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.example.project_1_menu_maker.db.AppDatabase;
-
 import java.util.Objects;
-
-
 
 @Entity(tableName = AppDatabase.USER_TABLE)
 public class User {
