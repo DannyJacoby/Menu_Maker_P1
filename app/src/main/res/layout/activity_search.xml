@@ -10,9 +10,34 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvRecipes"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="658dp"
+        android:layout_below="@+id/etKeyword"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="5dp" />
+
+    <EditText
+        android:id="@+id/etKeyword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp" />
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="15dp"
+        android:ems="10"
+        android:hint="Search"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/btSearch"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="28dp"
+        android:layout_toEndOf="@+id/etKeyword"
+        android:text="Search" />
+
 </RelativeLayout>
