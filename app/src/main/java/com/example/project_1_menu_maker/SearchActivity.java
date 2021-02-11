@@ -21,6 +21,7 @@ import com.example.project_1_menu_maker.models.Recipe;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class SearchActivity extends AppCompatActivity {
 
     List<Recipe> recipes;
     Button btSearch;
+    Button btRandom;
     EditText etKeyword;
 
 //    private int mUserId = getIntent().getIntExtra("com.example.project_1_menu_maker.db.userIdKey", -1);
@@ -46,6 +48,7 @@ public class SearchActivity extends AppCompatActivity {
         recipes = new ArrayList<>();
         btSearch = findViewById(R.id.btSearch);
         etKeyword = findViewById(R.id.etKeyword);
+        btRandom = findViewById(R.id.btRandom);
         final RecipeAdapter recipeAdapter = new RecipeAdapter(this, recipes);
 
         rmRecipes.setAdapter(recipeAdapter);
@@ -102,6 +105,36 @@ public class SearchActivity extends AppCompatActivity {
                         }
                     }
 
+                    @Override
+                    public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                        Log.d(TAG, "onFailure");
+                    }
+                });
+            }
+        });
+
+        btRandom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recipes.clear();
+                Intent i = new Intent(SearchActivity.this, DisplayActivity.class);
+
+                client.get("https://www.themealdb.com/api/json/v1/1/random.php/", new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Headers headers, JSON json) {
+                        Log.d(TAG, "onSuccess");
+                        JSONObject jsonObject = json.jsonObject;
+                        try {
+                            JSONArray results = jsonObject.getJSONArray("meals");
+                            Log.i(TAG, "Result: " + results.toString());
+                            recipes.addAll(Recipe.fromJsonArray(results));
+                            i.putExtra("recipe", Parcels.wrap(recipes.get(0)));
+                            startActivity(i);
+                        } catch (JSONException e) {
+                            Log.e(TAG, "Hit json exception" + e);
+                            e.printStackTrace();
+                        }
+                    }
                     @Override
                     public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                         Log.d(TAG, "onFailure");
