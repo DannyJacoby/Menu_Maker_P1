@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.project_1_menu_maker.db.Recipes;
 import com.example.project_1_menu_maker.models.Recipe;
 import com.squareup.picasso.Picasso;
 
@@ -54,6 +55,10 @@ public class DisplayActivity extends AppCompatActivity {
         ivImage = findViewById(R.id.ivImage);
 
         Recipe recipe = Parcels.unwrap(getIntent().getParcelableExtra("recipe"));
+
+//        Recipes recipes = new Recipes(mUserId, recipe.getMealId(), recipe.getTitle(), recipe.getCategory()....);
+//        mRecipeDAO.insert(recipes);
+
         tvMealTitle.setText(recipe.getTitle());
         String ImageUrl = recipe.getMealThumb();
 

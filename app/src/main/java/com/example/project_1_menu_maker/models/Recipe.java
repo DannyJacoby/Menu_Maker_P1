@@ -22,7 +22,7 @@ public class Recipe {
 
     public Recipe(){}
 
-    public Recipe( JSONObject jsonObject) throws JSONException {
+    public Recipe( JSONObject jsonObject ) throws JSONException {
         MealId = jsonObject.getInt("idMeal");
         Title = jsonObject.getString("strMeal");
         Category = jsonObject.getString("strCategory");
