@@ -3,11 +3,13 @@ package com.example.project_1_menu_maker.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Parcel
 public class Recipe {
 
     int MealId;
@@ -15,6 +17,8 @@ public class Recipe {
     String Category;
     String MealThumb;
     String Area;
+    String Ingredients = "";
+    String Instruction;
 
     public Recipe( JSONObject jsonObject) throws JSONException {
         MealId = jsonObject.getInt("idMeal");
@@ -22,6 +26,14 @@ public class Recipe {
         Category = jsonObject.getString("strCategory");
         Area = jsonObject.getString("strArea");
         MealThumb = jsonObject.getString("strMealThumb");
+        for (int i = 1; i < 21; i++){
+            if (jsonObject.getString("strIngredient"+String.valueOf(i)).equals("")){
+                break;
+            }
+            Ingredients += jsonObject.getString("strIngredient"+String.valueOf(i)) + "   " +  jsonObject.getString("strMeasure"+String.valueOf(i)) + "\n";
+        }
+        Instruction = jsonObject.getString("strInstructions");
+
     }
 
     public static List<Recipe> fromJsonArray(JSONArray recipeJsonArray) throws JSONException {
@@ -52,13 +64,19 @@ public class Recipe {
         return Area;
     }
 
+    public String getIngredients() {
+        return Ingredients;
+    }
+
+    public String getInstruction(){
+        return Instruction;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Recipe recipe = (Recipe) o;
         return MealId == recipe.MealId &&
-//                mUserId == recipe.mUserId &&
                 Objects.equals(Title, recipe.Title) &&
                 Objects.equals(Category, recipe.Category) &&
                 Objects.equals(MealThumb, recipe.MealThumb) &&
@@ -68,5 +86,6 @@ public class Recipe {
     @Override
     public int hashCode() {
         return Objects.hash(MealId, /*mUserId,*/ Title, Category, MealThumb, Area);
+
     }
 }
