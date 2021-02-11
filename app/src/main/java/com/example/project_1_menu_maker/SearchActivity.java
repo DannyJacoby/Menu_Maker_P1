@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +36,8 @@ public class SearchActivity extends AppCompatActivity {
     Button btSearch;
     EditText etKeyword;
 
+    private int mUserId = getIntent().getIntExtra("com.example.project_1_menu_maker.db.userIdKey", -1);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +61,10 @@ public class SearchActivity extends AppCompatActivity {
                 try {
                     JSONArray results = jsonObject.getJSONArray("meals");
                     Log.i(TAG, "Result: " + results.toString());
-                    recipes.addAll(Recipe.fromJsonArray(results));
+                    if(mUserId == -1) mUserId = 1;
+
+                    recipes.addAll(Recipe.fromJsonArray(/*mUserId,*/ results));
+
                     recipeAdapter.notifyDataSetChanged();
                     Log.i(TAG, "Recipes: "+ recipes.size());
                 } catch (JSONException e) {
@@ -108,6 +115,10 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
-
-
+    public static Intent intentFactory(Context context, int userId){
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.putExtra("com.example.project_1_menu_maker.db.userIdKey", userId);
+        return intent;
+    }
+  
 }

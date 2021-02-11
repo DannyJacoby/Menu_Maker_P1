@@ -7,6 +7,7 @@ import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Parcel
 public class Recipe {
@@ -19,10 +20,7 @@ public class Recipe {
     String Ingredients = "";
     String Instruction;
 
-    public Recipe() {}
-
-
-    public Recipe(JSONObject jsonObject) throws JSONException {
+    public Recipe( JSONObject jsonObject) throws JSONException {
         MealId = jsonObject.getInt("idMeal");
         Title = jsonObject.getString("strMeal");
         Category = jsonObject.getString("strCategory");
@@ -72,5 +70,22 @@ public class Recipe {
 
     public String getInstruction(){
         return Instruction;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Recipe recipe = (Recipe) o;
+        return MealId == recipe.MealId &&
+                Objects.equals(Title, recipe.Title) &&
+                Objects.equals(Category, recipe.Category) &&
+                Objects.equals(MealThumb, recipe.MealThumb) &&
+                Objects.equals(Area, recipe.Area);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(MealId, /*mUserId,*/ Title, Category, MealThumb, Area);
+
     }
 }

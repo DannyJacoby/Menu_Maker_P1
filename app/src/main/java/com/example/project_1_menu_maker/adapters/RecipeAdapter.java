@@ -34,8 +34,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         this.recipes = recipes;
     }
 
-
-
     @NonNull
     @Override
     public RecipeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
