@@ -11,10 +11,10 @@ import android.widget.TextView;
 
 import com.example.project_1_menu_maker.db.AppDatabase;
 import com.example.project_1_menu_maker.db.RecipeDAO;
-import com.example.project_1_menu_maker.db.UserDAO;
 import com.example.project_1_menu_maker.models.Recipe;
-import com.example.project_1_menu_maker.models.User;
 import com.google.android.material.snackbar.Snackbar;
+
+import org.json.JSONObject;
 
 public class DisplayActivity extends AppCompatActivity {
 
@@ -36,8 +36,24 @@ public class DisplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
 
+        wireUp();
+
+    }
+
+
+    private void wireUp(){
         mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
         if(mUserId == -1) mUserId = 1;
+    }
+
+    private void addRecipeToUser(){
+        // here convert JSON Recipe to DB Safe Recipe class[Recipes] (grab all data types of JSON and create a new object of Recipes
+    }
+
+    private JSONObject getRecipeAPI(){
+        JSONObject jsonObject = new JSONObject();
+
+        return jsonObject;
     }
 
     private void snackMaker(String message){

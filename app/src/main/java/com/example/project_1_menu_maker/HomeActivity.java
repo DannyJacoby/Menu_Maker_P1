@@ -14,7 +14,7 @@ import android.widget.Button;
 
 import com.example.project_1_menu_maker.db.AppDatabase;
 import com.example.project_1_menu_maker.db.UserDAO;
-import com.example.project_1_menu_maker.models.User;
+import com.example.project_1_menu_maker.db.User;
 import com.google.android.material.snackbar.Snackbar;
 
 public class HomeActivity extends AppCompatActivity {

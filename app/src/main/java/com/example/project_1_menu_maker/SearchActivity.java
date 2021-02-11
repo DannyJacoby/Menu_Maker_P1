@@ -56,7 +56,7 @@ public class SearchActivity extends AppCompatActivity {
                     Log.i(TAG, "Result: " + results.toString());
                     if(mUserId == -1) mUserId = 1;
 
-                    recipes.addAll(Recipe.fromJsonArray(mUserId, results));
+                    recipes.addAll(Recipe.fromJsonArray(/*mUserId,*/ results));
 
                     recipeAdapter.notifyDataSetChanged();
                     Log.i(TAG, "Recipes: "+ recipes.size());

@@ -14,7 +14,7 @@ import android.widget.Button;
 import com.example.project_1_menu_maker.db.AppDatabase;
 import com.example.project_1_menu_maker.db.RecipeDAO;
 import com.example.project_1_menu_maker.db.UserDAO;
-import com.example.project_1_menu_maker.models.User;
+import com.example.project_1_menu_maker.db.User;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getDatabase(){
         mUserDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME).allowMainThreadQueries().build().getUserDAO();
-        mRecipeDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME).allowMainThreadQueries().build().getRecipeDAO();
+//        mRecipeDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME).allowMainThreadQueries().build().getRecipeDAO();
     }
 
     public static Intent intentFactory(Context context){

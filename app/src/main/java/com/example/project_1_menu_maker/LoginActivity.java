@@ -9,16 +9,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.project_1_menu_maker.db.AppDatabase;
 import com.example.project_1_menu_maker.db.UserDAO;
-import com.example.project_1_menu_maker.models.User;
+import com.example.project_1_menu_maker.db.User;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 

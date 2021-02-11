@@ -6,8 +6,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.project_1_menu_maker.models.User;
-
 import java.util.List;
 
 @Dao
