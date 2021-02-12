@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.project_1_menu_maker.db.Recipes;
+import com.example.project_1_menu_maker.db.UserDAO;
 import com.example.project_1_menu_maker.models.Recipe;
 import com.squareup.picasso.Picasso;
 
@@ -35,8 +36,10 @@ public class DisplayActivity extends AppCompatActivity {
     TextView tvIngredient;
     Context context;
 
-    private Recipe mRecipe;
+//    private Recipe mRecipe;
     private RecipeDAO mRecipeDAO;
+
+    private UserDAO mUserDAO;
 
     private int mUserId;
 
@@ -44,7 +47,9 @@ public class DisplayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
-      
+
+        getDatabase();
+
         wireUp();
 
         tvMealTitle = findViewById(R.id.tvMealTitle);
@@ -55,9 +60,6 @@ public class DisplayActivity extends AppCompatActivity {
         ivImage = findViewById(R.id.ivImage);
 
         Recipe recipe = Parcels.unwrap(getIntent().getParcelableExtra("recipe"));
-
-//        Recipes recipes = new Recipes(mUserId, recipe.getMealId(), recipe.getTitle(), recipe.getCategory()....);
-//        mRecipeDAO.insert(recipes);
 
         tvMealTitle.setText(recipe.getTitle());
         String ImageUrl = recipe.getMealThumb();
@@ -72,11 +74,16 @@ public class DisplayActivity extends AppCompatActivity {
 
     private void wireUp(){
         mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
-        if(mUserId == -1) mUserId = 1;
+//        Log.e("")
     }
 
-    private void addRecipeToUser(){
-        // here convert JSON Recipe to DB Safe Recipe class[Recipes] (grab all data types of JSON and create a new object of Recipes
+    private void addRecipeToUser(Recipe recipe){
+        // here convert JSON Recipe to DB Safe Recipe class[Recipes] (grab all data types of JSON and create a new object of Recipe
+        // add a check here to make sure we're not adding in 2 of the same recipes to a user
+        //  (ie if recipesId is in table and if this recipes userId == this.userId)
+        //
+//        Recipes recipes = new Recipes(mUserId, recipe.getMealId(), recipe.getTitle(), recipe.getCategory()....);
+//        mRecipeDAO.insert(recipes);
     }
 
     private JSONObject getRecipeAPI(){
@@ -95,11 +102,17 @@ public class DisplayActivity extends AppCompatActivity {
                 .allowMainThreadQueries()
                 .build()
                 .getRecipeDAO();
+
+        mUserDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME)
+                .allowMainThreadQueries()
+                .build()
+                .getUserDAO();
     }
 
-    public static Intent intentFactory(Context context, int userId){
-        Intent intent = new Intent(context, LoginActivity.class);
+    public static Intent intentFactory(Context context, int userId, Recipe recipe){
+        Intent intent = new Intent(context, DisplayActivity.class);
         intent.putExtra(USER_ID_KEY, userId);
+        intent.putExtra("recipe", Parcels.wrap(recipe));
         return intent;
     }
 

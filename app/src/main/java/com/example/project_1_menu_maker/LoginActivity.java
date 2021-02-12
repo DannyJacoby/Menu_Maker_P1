@@ -36,9 +36,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private SharedPreferences mPreferences;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                     addUserToPrefs(mUser.getUserId());
                     Intent intent = HomeActivity.intentFactory(getApplicationContext(), mUser.getUserId() );
                     startActivity(intent);
+                    finish();
 
                 } else { // password is incorrect
                     snackMaker("Invalid Password");

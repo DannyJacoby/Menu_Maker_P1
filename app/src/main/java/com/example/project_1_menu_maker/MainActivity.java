@@ -41,10 +41,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         getDatabase();
-//        getPrefs();
+        getPrefs();
         checkForUser();
-
-
 
         btLogin = findViewById(R.id.btLogin);
         btSignUp = findViewById(R.id.btSignup);

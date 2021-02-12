@@ -25,13 +25,16 @@ import org.parceler.Parcels;
 import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
+    private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
 
     Context context;
     List<Recipe> recipes;
+    private int userId;
 
-    public RecipeAdapter(Context context, List<Recipe> recipes){
+    public RecipeAdapter(Context context, List<Recipe> recipes, int userId){
         this.context = context;
         this.recipes = recipes;
+        this.userId = userId;
     }
 
     @NonNull
@@ -85,9 +88,17 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+//                    Intent intent = DisplayActivity.intentFactory(context, userId, recipe);
+
                     Intent i = new Intent(context, DisplayActivity.class);
+
+                    i.putExtra(USER_ID_KEY, userId);
                     i.putExtra("recipe", Parcels.wrap(recipe));
+
                     context.startActivity(i);
+
+
 
                     
                 }

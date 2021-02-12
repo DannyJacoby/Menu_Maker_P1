@@ -74,7 +74,7 @@ public class SearchActivity extends AppCompatActivity {
         RecyclerView rmRecipes = findViewById(R.id.rvRecipes);
         recipes = new ArrayList<>();
 
-        final RecipeAdapter recipeAdapter = new RecipeAdapter(this, recipes);
+        final RecipeAdapter recipeAdapter = new RecipeAdapter(this, recipes, mUserId);
 
         rmRecipes.setAdapter(recipeAdapter);
 
@@ -115,6 +115,9 @@ public class SearchActivity extends AppCompatActivity {
         btSearch = findViewById(R.id.btSearch);
         etKeyword = findViewById(R.id.etKeyword);
         btRandom = findViewById(R.id.btRandom);
+        // Pull down menu possible replacement
+        // Make a class that inherits button class, then this specific button class then has an override based on button creation
+        // ie a class that is button letter and is set up as such
         btA = findViewById(R.id.btA);
         btB = findViewById(R.id.btB);
         btC = findViewById(R.id.btC);
