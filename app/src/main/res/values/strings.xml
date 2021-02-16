@@ -8,4 +8,5 @@
     <string name="searchRecipeBtnRes">Search For Recipes</string>
     <string name="displayHomeBtnRes">Display My Recipes</string>
     <string name="logoutHomeBtnRes">Logout</string>
+    <string name="homeRes">Home</string>
 </resources>

@@ -56,7 +56,7 @@ public class SearchActivity extends AppCompatActivity {
     private UserDAO mUserDAO;
     private RecipeDAO mRecipeDAO;
 
-    private SharedPreferences mPreferences = null;
+//    private SharedPreferences mPreferences = null;
 
     private User mUser;
 
@@ -280,10 +280,10 @@ public class SearchActivity extends AppCompatActivity {
             return;
         }
 
-        if (mPreferences == null) {
-            getPrefs();
-        }
-        mUserId = mPreferences.getInt(USER_ID_KEY, -1);
+//        if (mPreferences == null) {
+//            getPrefs();
+//        }
+//        mUserId = mPreferences.getInt(USER_ID_KEY, -1);
 
         if (mUserId != -1) {
             return;
@@ -303,7 +303,7 @@ public class SearchActivity extends AppCompatActivity {
 
         alertBuilder.setPositiveButton("Yes", (dialog, which) -> {
             clearUserFromIntent();
-            clearUserFromPrefs();
+//            clearUserFromPrefs();
             mUserId = -1;
             checkForUser();
         });
@@ -316,22 +316,22 @@ public class SearchActivity extends AppCompatActivity {
         alertBuilder.create().show();
     }
 
-    private void getPrefs () {
-        mPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
-    }
+//    private void getPrefs () {
+//        mPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
+//    }
+//
+//    private void addUserToPrefs ( int userId){
+//        if (mPreferences == null) {
+//            getPrefs();
+//        }
+//        SharedPreferences.Editor editor = mPreferences.edit();
+//        editor.putInt(USER_ID_KEY, userId);
+//        editor.apply();
+//    }
 
-    private void addUserToPrefs ( int userId){
-        if (mPreferences == null) {
-            getPrefs();
-        }
-        SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putInt(USER_ID_KEY, userId);
-        editor.apply();
-    }
-
-    private void clearUserFromPrefs () {
-        addUserToPrefs(-1);
-    }
+//    private void clearUserFromPrefs () {
+//        addUserToPrefs(-1);
+//    }
 
     private void clearUserFromIntent () {
         getIntent().putExtra(USER_ID_KEY, -1);

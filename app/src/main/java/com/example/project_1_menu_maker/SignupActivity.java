@@ -28,7 +28,6 @@ public class SignupActivity extends AppCompatActivity {
     private User mUser;
     private UserDAO mUserDAO;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
