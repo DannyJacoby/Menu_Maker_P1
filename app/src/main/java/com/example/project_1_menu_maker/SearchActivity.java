@@ -338,7 +338,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void snackMaker (String message){
-        Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutActivityMain),
+        Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutSearchActivity),
                 message,
                 Snackbar.LENGTH_SHORT);
         snackBar.show();

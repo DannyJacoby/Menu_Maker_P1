@@ -6,6 +6,8 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.example.project_1_menu_maker.models.Recipe;
+
 import java.util.List;
 
 @Dao
@@ -25,5 +27,8 @@ public interface RecipeDAO {
 
     @Query("SELECT * FROM " + AppDatabase.RECIPE_TABLE + " WHERE userId = :userId")
     List<Recipes> getAllUserRecipes(int userId);
+
+    @Query("SELECT * FROM " + AppDatabase.RECIPE_TABLE + " WHERE menuId = :menuId")
+    List<Recipes> getAllRecipesById(int menuId);
 
 }

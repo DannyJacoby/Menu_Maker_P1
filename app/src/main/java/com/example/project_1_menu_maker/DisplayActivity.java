@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,9 +29,11 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class DisplayActivity extends AppCompatActivity {
     private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
-    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
+//    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
 
     TextView tvMealTitle;
     ImageView ivImage;
@@ -36,11 +41,14 @@ public class DisplayActivity extends AppCompatActivity {
     TextView tvIngredient;
     Context context;
 
-//    private Recipe mRecipe;
+    private ImageButton mFavoriteBtn;
+    private boolean hasBeenSaved;
+
+    private Recipe mRecipe;
+    private Recipes mRecipes;
     private RecipeDAO mRecipeDAO;
 
     private UserDAO mUserDAO;
-
     private int mUserId;
 
     @Override
@@ -52,6 +60,14 @@ public class DisplayActivity extends AppCompatActivity {
 
         wireUp();
 
+        loadRecipe();
+
+    }
+
+
+    private void wireUp(){
+        mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
+
         tvMealTitle = findViewById(R.id.tvMealTitle);
         tvIngredient = findViewById(R.id.tvIngredient);
         tvInstruction = findViewById(R.id.tvInstruction);
@@ -59,25 +75,33 @@ public class DisplayActivity extends AppCompatActivity {
         tvIngredient.setMovementMethod(new ScrollingMovementMethod());
         ivImage = findViewById(R.id.ivImage);
 
-        Recipe recipe = Parcels.unwrap(getIntent().getParcelableExtra("recipe"));
+        mFavoriteBtn = findViewById(R.id.favoriteButtonDisplay);
+        mFavoriteBtn.setImageResource(android.R.drawable.btn_star_big_off);
+        mFavoriteBtn.setOnClickListener(v -> {
+            if(!hasBeenSaved) {
+                snackMaker("You saved this recipe!");
+                mFavoriteBtn.setImageResource(android.R.drawable.star_big_on);
+                hasBeenSaved = true;
+                // insert recipes to db
+            } else {
+                snackMaker("You unsaved this recipe!");
+                mFavoriteBtn.setImageResource(android.R.drawable.star_big_off);
+                hasBeenSaved = false;
+                // delete recipes from db
+            }
 
-        tvMealTitle.setText(recipe.getTitle());
-        String ImageUrl = recipe.getMealThumb();
-
-        Log.d("Image", "bind: "+ ImageUrl);
-        Picasso.get().load(ImageUrl).into(ivImage);
-        tvIngredient.setText(recipe.getIngredients());
-        tvInstruction.setText(recipe.getInstruction());
+        });
 
     }
 
-
-    private void wireUp(){
+    private void loginUser(){
         mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
-//        Log.e("")
+        if(mUserId == -1){
+            Log.e("Big Fuckin error with", "DisplayActivity, Login Error (no user in intent)");
+        }
     }
 
-    private void addRecipeToUser(Recipe recipe){
+    private void addRecipeToUser(){
         // here convert JSON Recipe to DB Safe Recipe class[Recipes] (grab all data types of JSON and create a new object of Recipe
         // add a check here to make sure we're not adding in 2 of the same recipes to a user
         //  (ie if recipesId is in table and if this recipes userId == this.userId)
@@ -86,14 +110,34 @@ public class DisplayActivity extends AppCompatActivity {
 //        mRecipeDAO.insert(recipes);
     }
 
-    private JSONObject getRecipeAPI(){
-        JSONObject jsonObject = new JSONObject();
+    private void deleteRecipeFromUser(){
+        //mRecipeDAO.delete(mRecipes);
+    }
 
-        return jsonObject;
+    private void checkForRecipeInDB(){
+        // use mRecipe and mUserId to check through DB
+        List<Recipes> myRecipes = mRecipeDAO.getAllUserRecipes(mUserId);
+
+    }
+
+    private void loadRecipe(){
+        mRecipe = Parcels.unwrap(getIntent().getParcelableExtra("recipe"));
+        if(mRecipe == null){
+            Log.e("Big Fuckin error with", "DisplayActivity, Load Recipe (recipe is not in extra)");
+            return;
+        }
+
+        tvMealTitle.setText(mRecipe.getTitle());
+        String ImageUrl = mRecipe.getMealThumb();
+
+        Log.d("Image", "bind: "+ ImageUrl);
+        Picasso.get().load(ImageUrl).into(ivImage);
+        tvIngredient.setText(mRecipe.getIngredients());
+        tvInstruction.setText(mRecipe.getInstruction());
     }
 
     private void snackMaker(String message){
-        Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutLoginActivity), message, Snackbar.LENGTH_SHORT);
+        Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutDisplayActivity), message, Snackbar.LENGTH_SHORT);
         snackBar.show();
     }
 

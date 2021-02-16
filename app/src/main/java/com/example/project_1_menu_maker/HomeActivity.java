@@ -134,7 +134,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void snackMaker(String message){
-        Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutLoginActivity), message, Snackbar.LENGTH_SHORT);
+        Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutHomeActivity), message, Snackbar.LENGTH_SHORT);
         snackBar.show();
     }
 
