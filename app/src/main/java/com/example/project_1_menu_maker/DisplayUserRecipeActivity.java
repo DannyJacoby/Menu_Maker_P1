@@ -2,6 +2,8 @@ package com.example.project_1_menu_maker;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import android.content.Context;
@@ -13,6 +15,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.codepath.asynchttpclient.AsyncHttpClient;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.example.project_1_menu_maker.adapters.RecipeAdapter;
 import com.example.project_1_menu_maker.db.AppDatabase;
 import com.example.project_1_menu_maker.db.RecipeDAO;
 import com.example.project_1_menu_maker.db.Recipes;
@@ -21,9 +26,15 @@ import com.example.project_1_menu_maker.db.UserDAO;
 import com.example.project_1_menu_maker.models.Recipe;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Headers;
 
 public class DisplayUserRecipeActivity extends AppCompatActivity {
 
@@ -32,6 +43,7 @@ public class DisplayUserRecipeActivity extends AppCompatActivity {
     private int mUserId;
     private User mUser;
     private UserDAO mUserDAO;
+    List<Recipes> recipes;
 
     private RecipeDAO mRecipeDAO;
 
@@ -51,6 +63,22 @@ public class DisplayUserRecipeActivity extends AppCompatActivity {
         checkForUser();
 
         Log.e("User Id coming into DisplayUserRecipes is ", String.valueOf(mUserId));
+
+        RecyclerView rmRecipe = findViewById(R.id.rvRecipe);
+        recipes = new ArrayList<>();
+
+
+        final RecipeAdapter2 recipeAdapter = new RecipeAdapter2(this, recipes, mUserId);
+
+        rmRecipe.setAdapter(recipeAdapter);
+
+        rmRecipe.setLayoutManager(new LinearLayoutManager(this));
+
+        recipes.addAll(mRecipeDAO.getAllUserRecipes(mUserId));
+
+        recipeAdapter.notifyDataSetChanged();
+
+
 
     }
 

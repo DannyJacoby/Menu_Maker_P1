@@ -4,8 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import org.parceler.Parcel;
+
 import java.util.Objects;
 
+@Parcel
 @Entity(tableName = AppDatabase.RECIPE_TABLE)
 public class Recipes {
 
@@ -21,6 +24,8 @@ public class Recipes {
     private String area;
     private String ingredients;
     private String instruction;
+
+    public Recipes(){}
 
     public Recipes(int userId, int mealId, String title, String category, String mealThumb, String area, String ingredients, String instruction) {
         this.userId = userId;
