@@ -47,11 +47,9 @@ public class DisplayUserRecipeActivity extends AppCompatActivity {
 
         Log.e("User Id coming into DisplayUserRecipes is ", String.valueOf(mUserId));
 
-
     }
 
     private void wireUp(){
-
         mHomeBtn = findViewById(R.id.homeBtnDisplayUser);
         mHomeBtn.setOnClickListener(v -> {
             Intent intent = HomeActivity.intentFactory(getApplicationContext(), mUserId);
@@ -59,7 +57,6 @@ public class DisplayUserRecipeActivity extends AppCompatActivity {
         });
 
     }
-
 
     private void loginUser(int userId) {
         mUser = mUserDAO.getUserByUserId(userId);

@@ -45,7 +45,7 @@ public class DisplayActivity extends AppCompatActivity {
     private boolean hasBeenSaved;
 
     private Recipe mRecipe;
-    private Recipes mRecipes;
+    private Recipes myRecipes;
     private RecipeDAO mRecipeDAO;
 
     private UserDAO mUserDAO;
@@ -57,6 +57,8 @@ public class DisplayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_display);
 
         getDatabase();
+
+        loginUser();
 
         wireUp();
 
@@ -76,7 +78,10 @@ public class DisplayActivity extends AppCompatActivity {
         ivImage = findViewById(R.id.ivImage);
 
         mFavoriteBtn = findViewById(R.id.favoriteButtonDisplay);
+
+        //set this with the "hasBeenSaved" variable (set that with a checkForRecipeInDB call or smth)
         mFavoriteBtn.setImageResource(android.R.drawable.btn_star_big_off);
+
         mFavoriteBtn.setOnClickListener(v -> {
             if(!hasBeenSaved) {
                 snackMaker("You saved this recipe!");
@@ -102,22 +107,22 @@ public class DisplayActivity extends AppCompatActivity {
     }
 
     private void addRecipeToUser(){
-        // here convert JSON Recipe to DB Safe Recipe class[Recipes] (grab all data types of JSON and create a new object of Recipe
-        // add a check here to make sure we're not adding in 2 of the same recipes to a user
-        //  (ie if recipesId is in table and if this recipes userId == this.userId)
-        //
-//        Recipes recipes = new Recipes(mUserId, recipe.getMealId(), recipe.getTitle(), recipe.getCategory()....);
-//        mRecipeDAO.insert(recipes);
+        mRecipeDAO.insert(myRecipes);
     }
 
     private void deleteRecipeFromUser(){
         //mRecipeDAO.delete(mRecipes);
     }
 
-    private void checkForRecipeInDB(){
+    private boolean checkForRecipeInDB(){
         // use mRecipe and mUserId to check through DB
         List<Recipes> myRecipes = mRecipeDAO.getAllUserRecipes(mUserId);
-
+        for(Recipes myRecipe : myRecipes){
+            if(myRecipe.getMenuId() == mRecipe.getMealId()){
+                return true;
+            }
+        }
+        return false;
     }
 
     private void loadRecipe(){
@@ -126,6 +131,14 @@ public class DisplayActivity extends AppCompatActivity {
             Log.e("Big Fuckin error with", "DisplayActivity, Load Recipe (recipe is not in extra)");
             return;
         }
+
+        if(checkForRecipeInDB()){
+
+        }
+        myRecipes = new Recipes(mUserId, mRecipe.getMealId(),
+                mRecipe.getTitle(), mRecipe.getCategory(),
+                mRecipe.getMealThumb(), mRecipe.getArea(),
+                mRecipe.getIngredients(), mRecipe.getInstruction());
 
         tvMealTitle.setText(mRecipe.getTitle());
         String ImageUrl = mRecipe.getMealThumb();

@@ -31,4 +31,7 @@ public interface RecipeDAO {
     @Query("SELECT * FROM " + AppDatabase.RECIPE_TABLE + " WHERE menuId = :menuId")
     List<Recipes> getAllRecipesById(int menuId);
 
+    @Query("SELECT * FROM " + AppDatabase.RECIPE_TABLE + " WHERE userId = :userId AND menuId = :mealId")
+    Recipes getUserSpecificRecipeInDB(int userId, int mealId);
+
 }

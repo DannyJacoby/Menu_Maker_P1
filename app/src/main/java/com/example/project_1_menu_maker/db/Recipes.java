@@ -19,13 +19,15 @@ public class Recipes {
     private String ingredients;
     private String instruction;
 
-    public Recipes(int userId, int menuId, String title, String category, String mealThumb, String area) {
+    public Recipes(int userId, int menuId, String title, String category, String mealThumb, String area, String ingredients, String instruction) {
         this.userId = userId;
         this.menuId = menuId;
         this.title = title;
         this.category = category;
         this.mealThumb = mealThumb;
         this.area = area;
+        this.ingredients = ingredients;
+        this.instruction = instruction;
     }
 
     public int getUserId() {
