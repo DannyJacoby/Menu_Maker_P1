@@ -15,12 +15,15 @@ import android.widget.Button;
 
 import com.example.project_1_menu_maker.db.AppDatabase;
 import com.example.project_1_menu_maker.db.RecipeDAO;
+import com.example.project_1_menu_maker.db.Recipes;
 import com.example.project_1_menu_maker.db.User;
 import com.example.project_1_menu_maker.db.UserDAO;
 import com.example.project_1_menu_maker.models.Recipe;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.parceler.Parcels;
+
+import java.util.List;
 
 public class DisplayUserRecipeActivity extends AppCompatActivity {
 
@@ -33,6 +36,8 @@ public class DisplayUserRecipeActivity extends AppCompatActivity {
     private RecipeDAO mRecipeDAO;
 
     private Button mHomeBtn;
+
+    // note, use mRecipeDAO.getAllUserRecipes(mUserId); to get a List<Recipes> that then you can iterate through
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +88,8 @@ public class DisplayUserRecipeActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+
 
     private void snackMaker(String message){
         Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutDisplayUserActivity), message, Snackbar.LENGTH_SHORT);

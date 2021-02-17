@@ -8,10 +8,11 @@ import java.util.Objects;
 @Entity(tableName = AppDatabase.RECIPE_TABLE)
 public class Recipes {
 
-    @PrimaryKey
-    private int userId;
+    @PrimaryKey(autoGenerate = true)
+    private int recipeId;
 
-    private int menuId;
+    private int userId;
+    private int mealId;
     private String title;
     private String category;
     private String mealThumb;
@@ -19,9 +20,9 @@ public class Recipes {
     private String ingredients;
     private String instruction;
 
-    public Recipes(int userId, int menuId, String title, String category, String mealThumb, String area, String ingredients, String instruction) {
+    public Recipes(int userId, int mealId, String title, String category, String mealThumb, String area, String ingredients, String instruction) {
         this.userId = userId;
-        this.menuId = menuId;
+        this.mealId = mealId;
         this.title = title;
         this.category = category;
         this.mealThumb = mealThumb;
@@ -30,6 +31,9 @@ public class Recipes {
         this.instruction = instruction;
     }
 
+    public int getRecipeId() { return recipeId; }
+    public void setRecipeId(int recipeId) { this.recipeId = recipeId; }
+
     public int getUserId() {
         return userId;
     }
@@ -37,11 +41,11 @@ public class Recipes {
         this.userId = userId;
     }
 
-    public int getMenuId() {
-        return menuId;
+    public int getMealId() {
+        return mealId;
     }
-    public void setMenuId(int menuId) {
-        this.menuId = menuId;
+    public void setMealId(int menuId) {
+        this.mealId = menuId;
     }
 
     public String getTitle() {
@@ -92,7 +96,7 @@ public class Recipes {
         if (o == null || getClass() != o.getClass()) return false;
         Recipes recipes = (Recipes) o;
         return userId == recipes.userId &&
-                menuId == recipes.menuId &&
+                mealId == recipes.mealId &&
                 Objects.equals(title, recipes.title) &&
                 Objects.equals(category, recipes.category) &&
                 Objects.equals(mealThumb, recipes.mealThumb) &&
@@ -101,6 +105,6 @@ public class Recipes {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, menuId, title, category, mealThumb, area);
+        return Objects.hash(userId, mealId, title, category, mealThumb, area);
     }
 }

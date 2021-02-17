@@ -42,7 +42,7 @@ public class DisplayActivity extends AppCompatActivity {
     Context context;
 
     private ImageButton mFavoriteBtn;
-    private boolean hasBeenSaved;
+    private boolean hasBeenSaved = false;
 
     private Recipe mRecipe;
     private Recipes myRecipes;
@@ -94,11 +94,10 @@ public class DisplayActivity extends AppCompatActivity {
                 mFavoriteBtn.setImageResource(android.R.drawable.star_big_off);
                 hasBeenSaved = false;
                 // delete recipes from db
+                Log.e("DisplayActivity current recipe brought in", String.valueOf(myRecipes.getMealId()));
                 deleteRecipeFromUser();
             }
-
         });
-
     }
 
     private void loginUser(){
@@ -120,7 +119,7 @@ public class DisplayActivity extends AppCompatActivity {
         // use mRecipe and mUserId to check through DB
         List<Recipes> myRecipes = mRecipeDAO.getAllUserRecipes(mUserId);
         for(Recipes myRecipe : myRecipes){
-            if(myRecipe.getMenuId() == mRecipe.getMealId()){
+            if(myRecipe.getMealId() == mRecipe.getMealId()){
                 return true;
             }
         }
@@ -134,9 +133,12 @@ public class DisplayActivity extends AppCompatActivity {
             return;
         }
 
+        // if there is a recipe with this meal id in the db with this user id, then BOOM do the thing earlier
         if(checkForRecipeInDB()){
-
+            hasBeenSaved = true;
+            mFavoriteBtn.setImageResource(android.R.drawable.star_big_on);
         }
+
         myRecipes = new Recipes(mUserId, mRecipe.getMealId(),
                 mRecipe.getTitle(), mRecipe.getCategory(),
                 mRecipe.getMealThumb(), mRecipe.getArea(),
