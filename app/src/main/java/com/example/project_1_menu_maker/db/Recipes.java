@@ -1,5 +1,6 @@
 package com.example.project_1_menu_maker.db;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -8,7 +9,10 @@ import java.util.Objects;
 @Entity(tableName = AppDatabase.RECIPE_TABLE)
 public class Recipes {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    private int recipeId;
+
     private int userId;
 
     private int menuId;
@@ -28,6 +32,14 @@ public class Recipes {
         this.area = area;
         this.ingredients = ingredients;
         this.instruction = instruction;
+    }
+
+    public int getRecipeId() {
+        return recipeId;
+    }
+
+    public void setRecipeId(int recipeId) {
+        this.recipeId = recipeId;
     }
 
     public int getUserId() {

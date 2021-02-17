@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.project_1_menu_maker.db.Recipes;
@@ -68,6 +69,7 @@ public class DisplayActivity extends AppCompatActivity {
 
 
     private void wireUp(){
+        mRecipe = Parcels.unwrap(getIntent().getParcelableExtra("recipe"));
         mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
 
         tvMealTitle = findViewById(R.id.tvMealTitle);
@@ -81,6 +83,14 @@ public class DisplayActivity extends AppCompatActivity {
 
         //set this with the "hasBeenSaved" variable (set that with a checkForRecipeInDB call or smth)
         mFavoriteBtn.setImageResource(android.R.drawable.btn_star_big_off);
+        try {
+            if (checkForRecipeInDB()){
+                mFavoriteBtn.setImageResource(android.R.drawable.star_big_on);
+                hasBeenSaved = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         mFavoriteBtn.setOnClickListener(v -> {
             if(!hasBeenSaved) {
@@ -88,13 +98,17 @@ public class DisplayActivity extends AppCompatActivity {
                 mFavoriteBtn.setImageResource(android.R.drawable.star_big_on);
                 hasBeenSaved = true;
                 // insert recipes to db
-                addRecipeToUser();
+                if(!checkForRecipeInDB()) {
+                    addRecipeToUser();
+                }
             } else {
                 snackMaker("You unsaved this recipe!");
                 mFavoriteBtn.setImageResource(android.R.drawable.star_big_off);
                 hasBeenSaved = false;
                 // delete recipes from db
-                deleteRecipeFromUser();
+                if (checkForRecipeInDB()) {
+                    deleteRecipeFromUser();
+                }
             }
 
         });
@@ -113,7 +127,7 @@ public class DisplayActivity extends AppCompatActivity {
     }
 
     private void deleteRecipeFromUser(){
-        mRecipeDAO.delete(myRecipes);
+        mRecipeDAO.deleteUserSpecificRecipeInDB(mUserId, mRecipe.getMealId());
     }
 
     private boolean checkForRecipeInDB(){

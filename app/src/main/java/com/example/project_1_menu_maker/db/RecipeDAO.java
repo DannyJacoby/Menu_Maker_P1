@@ -20,7 +20,7 @@ public interface RecipeDAO {
     void update(Recipes... mRecipes);
 
     @Delete
-    void delete(Recipes mRecipe);
+    void delete(Recipes mRecipes);
 
     @Query("SELECT * FROM " + AppDatabase.RECIPE_TABLE)
     List<Recipes> getAllRecipesInDB();
@@ -34,4 +34,6 @@ public interface RecipeDAO {
     @Query("SELECT * FROM " + AppDatabase.RECIPE_TABLE + " WHERE userId = :userId AND menuId = :mealId")
     Recipes getUserSpecificRecipeInDB(int userId, int mealId);
 
+    @Query("DELETE FROM " + AppDatabase.RECIPE_TABLE + " WHERE userId = :userId AND menuid = :mealId")
+    void deleteUserSpecificRecipeInDB(int userId, int mealId);
 }

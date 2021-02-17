@@ -12,6 +12,7 @@ import android.os.Debug;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.project_1_menu_maker.db.AppDatabase;
 import com.example.project_1_menu_maker.db.RecipeDAO;
@@ -77,6 +78,7 @@ public class DisplayUserRecipeActivity extends AppCompatActivity {
 //            loginUser(mUserId);
 //            return;
 //        }
+
 
         snackMaker("Error, no user logged in");
         Intent intent = MainActivity.intentFactory(this);
