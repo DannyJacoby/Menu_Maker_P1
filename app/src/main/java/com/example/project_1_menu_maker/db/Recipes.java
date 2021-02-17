@@ -1,5 +1,6 @@
 package com.example.project_1_menu_maker.db;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -9,6 +10,7 @@ import java.util.Objects;
 public class Recipes {
 
     @PrimaryKey(autoGenerate = true)
+    @NonNull
     private int recipeId;
 
     private int userId;

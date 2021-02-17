@@ -34,4 +34,7 @@ public interface RecipeDAO {
     @Query("SELECT * FROM " + AppDatabase.RECIPE_TABLE + " WHERE userId = :userId AND mealId = :mealId")
     Recipes getUserSpecificRecipeInDB(int userId, int mealId);
 
+    @Query("DELETE FROM " + AppDatabase.RECIPE_TABLE + " WHERE userId = :userId AND mealId = :mealId")
+    void deleteUserSpecificRecipeInDB(int userId, int mealId);
+
 }

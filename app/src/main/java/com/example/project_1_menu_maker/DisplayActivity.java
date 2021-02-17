@@ -68,6 +68,7 @@ public class DisplayActivity extends AppCompatActivity {
 
 
     private void wireUp(){
+        mRecipe = Parcels.unwrap(getIntent().getParcelableExtra("recipe"));
         mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
 
         tvMealTitle = findViewById(R.id.tvMealTitle);
@@ -81,6 +82,7 @@ public class DisplayActivity extends AppCompatActivity {
 
         //set this with the "hasBeenSaved" variable (set that with a checkForRecipeInDB call or smth)
         mFavoriteBtn.setImageResource(android.R.drawable.btn_star_big_off);
+
 
         mFavoriteBtn.setOnClickListener(v -> {
             if(!hasBeenSaved) {
@@ -112,7 +114,7 @@ public class DisplayActivity extends AppCompatActivity {
     }
 
     private void deleteRecipeFromUser(){
-        mRecipeDAO.delete(myRecipes);
+        mRecipeDAO.deleteUserSpecificRecipeInDB(mUserId, mRecipe.getMealId());
     }
 
     private boolean checkForRecipeInDB(){
