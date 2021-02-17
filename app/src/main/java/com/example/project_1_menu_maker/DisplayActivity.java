@@ -88,11 +88,13 @@ public class DisplayActivity extends AppCompatActivity {
                 mFavoriteBtn.setImageResource(android.R.drawable.star_big_on);
                 hasBeenSaved = true;
                 // insert recipes to db
+                addRecipeToUser();
             } else {
                 snackMaker("You unsaved this recipe!");
                 mFavoriteBtn.setImageResource(android.R.drawable.star_big_off);
                 hasBeenSaved = false;
                 // delete recipes from db
+                deleteRecipeFromUser();
             }
 
         });
@@ -111,7 +113,7 @@ public class DisplayActivity extends AppCompatActivity {
     }
 
     private void deleteRecipeFromUser(){
-        //mRecipeDAO.delete(mRecipes);
+        mRecipeDAO.delete(myRecipes);
     }
 
     private boolean checkForRecipeInDB(){
@@ -145,7 +147,7 @@ public class DisplayActivity extends AppCompatActivity {
 
         Log.d("Image", "bind: "+ ImageUrl);
         Picasso.get().load(ImageUrl).into(ivImage);
-        tvIngredient.setText(mRecipe.getIngredients());
+        tvIngredient.setText("Ingredients:\n" + mRecipe.getIngredients());
         tvInstruction.setText(mRecipe.getInstruction());
     }
 
