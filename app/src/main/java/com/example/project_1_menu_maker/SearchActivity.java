@@ -8,7 +8,6 @@ import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -181,7 +180,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 recipes.clear();
-                Intent i = new Intent(SearchActivity.this, DisplayActivity.class);
+                Intent i = new Intent(SearchActivity.this, DetailsActivity.class);
 
                 client.get(RANDOM_URL, new JsonHttpResponseHandler() {
                     @Override

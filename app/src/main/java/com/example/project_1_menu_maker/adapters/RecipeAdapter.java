@@ -2,8 +2,6 @@ package com.example.project_1_menu_maker.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.os.Parcel;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.project_1_menu_maker.DisplayActivity;
+import com.example.project_1_menu_maker.DetailsActivity;
 import com.example.project_1_menu_maker.R;
 import com.example.project_1_menu_maker.models.Recipe;
 
@@ -89,15 +87,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                 @Override
                 public void onClick(View v) {
 
-                    Intent intent = DisplayActivity.intentFactory(context, userId, recipe);
+                    Intent intent = DetailsActivity.intentFactory(context, userId, recipe);
                     intent.putExtra("recipe", Parcels.wrap(recipe));
                     context.startActivity(intent);
-//                    Intent i = new Intent(context, DisplayActivity.class);
-//
-//                    i.putExtra(USER_ID_KEY, userId);
-
-//
-//                    context.startActivity(i);
 
                 }
             });

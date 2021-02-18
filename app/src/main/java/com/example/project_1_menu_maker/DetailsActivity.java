@@ -1,5 +1,8 @@
 package com.example.project_1_menu_maker;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,22 +12,19 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
-import com.example.project_1_menu_maker.db.AppDatabase;
-import com.example.project_1_menu_maker.db.RecipeDAO;
 import com.example.project_1_menu_maker.db.Recipes;
 import com.example.project_1_menu_maker.db.UserDAO;
 import com.example.project_1_menu_maker.models.Recipe;
-import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
+import com.example.project_1_menu_maker.db.AppDatabase;
+import com.example.project_1_menu_maker.db.RecipeDAO;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
-public class DisplayActivity2 extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity {
     private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
 //    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
 
@@ -48,7 +48,7 @@ public class DisplayActivity2 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_display2);
+        setContentView(R.layout.activity_details);
 
         getDatabase();
 
@@ -62,7 +62,7 @@ public class DisplayActivity2 extends AppCompatActivity {
 
 
     private void wireUp(){
-        myRecipes = Parcels.unwrap(getIntent().getParcelableExtra("recipe"));
+        mRecipe = Parcels.unwrap(getIntent().getParcelableExtra("recipe"));
         mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
 
         tvMealTitle = findViewById(R.id.tvMealTitle);
@@ -108,14 +108,14 @@ public class DisplayActivity2 extends AppCompatActivity {
     }
 
     private void deleteRecipeFromUser(){
-        mRecipeDAO.deleteUserSpecificRecipeInDB(mUserId, myRecipes.getMealId());
+        mRecipeDAO.deleteUserSpecificRecipeInDB(mUserId, mRecipe.getMealId());
     }
 
     private boolean checkForRecipeInDB(){
         // use mRecipe and mUserId to check through DB
-        List<Recipes> myRecipeA = mRecipeDAO.getAllUserRecipes(mUserId);
-        for(Recipes myRecipe : myRecipeA){
-            if(myRecipe.getMealId() == myRecipes.getMealId()){
+        List<Recipes> myRecipes = mRecipeDAO.getAllUserRecipes(mUserId);
+        for(Recipes myRecipe : myRecipes){
+            if(myRecipe.getMealId() == mRecipe.getMealId()){
                 return true;
             }
         }
@@ -123,8 +123,8 @@ public class DisplayActivity2 extends AppCompatActivity {
     }
 
     private void loadRecipe(){
-        myRecipes = Parcels.unwrap(getIntent().getParcelableExtra("recipe"));
-        if(myRecipes == null){
+        mRecipe = Parcels.unwrap(getIntent().getParcelableExtra("recipe"));
+        if(mRecipe == null){
             Log.e("Big Fuckin error with", "DisplayActivity, Load Recipe (recipe is not in extra)");
             return;
         }
@@ -135,14 +135,18 @@ public class DisplayActivity2 extends AppCompatActivity {
             mFavoriteBtn.setImageResource(android.R.drawable.star_big_on);
         }
 
+        myRecipes = new Recipes(mUserId, mRecipe.getMealId(),
+                mRecipe.getTitle(), mRecipe.getCategory(),
+                mRecipe.getMealThumb(), mRecipe.getArea(),
+                mRecipe.getIngredients(), mRecipe.getInstruction());
 
-        tvMealTitle.setText(myRecipes.getTitle());
-        String ImageUrl = myRecipes.getMealThumb();
+        tvMealTitle.setText(mRecipe.getTitle());
+        String ImageUrl = mRecipe.getMealThumb();
 
         Log.d("Image", "bind: "+ ImageUrl);
         Picasso.get().load(ImageUrl).into(ivImage);
-        tvIngredient.setText("Ingredients:\n" + myRecipes.getIngredients());
-        tvInstruction.setText(myRecipes.getInstruction());
+        tvIngredient.setText("Ingredients:\n" + mRecipe.getIngredients());
+        tvInstruction.setText(mRecipe.getInstruction());
     }
 
     private void snackMaker(String message){
@@ -162,8 +166,8 @@ public class DisplayActivity2 extends AppCompatActivity {
                 .getUserDAO();
     }
 
-    public static Intent intentFactory(Context context, int userId, Recipes recipe){
-        Intent intent = new Intent(context, DisplayActivity2.class);
+    public static Intent intentFactory(Context context, int userId, Recipe recipe){
+        Intent intent = new Intent(context, DetailsActivity.class);
         intent.putExtra(USER_ID_KEY, userId);
         intent.putExtra("recipe", Parcels.wrap(recipe));
         return intent;

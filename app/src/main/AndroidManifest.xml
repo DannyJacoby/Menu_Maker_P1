@@ -12,8 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Project_1_Menu_Maker">
         <activity android:name=".DisplayUserRecipeActivity"></activity>
-        <activity android:name=".DisplayActivity" />
-        <activity android:name=".DisplayActivity2" />
+        <activity android:name=".DetailsActivity" />
+        <activity android:name=".UserDetailsActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".SignupActivity" />

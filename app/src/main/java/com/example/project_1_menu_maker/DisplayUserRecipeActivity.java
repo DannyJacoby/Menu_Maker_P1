@@ -1,40 +1,26 @@
 package com.example.project_1_menu_maker;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Debug;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
-import com.codepath.asynchttpclient.AsyncHttpClient;
-import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
-import com.example.project_1_menu_maker.adapters.RecipeAdapter;
+import com.example.project_1_menu_maker.adapters.UserRecipeAdapter;
 import com.example.project_1_menu_maker.db.AppDatabase;
 import com.example.project_1_menu_maker.db.RecipeDAO;
 import com.example.project_1_menu_maker.db.Recipes;
 import com.example.project_1_menu_maker.db.User;
 import com.example.project_1_menu_maker.db.UserDAO;
-import com.example.project_1_menu_maker.models.Recipe;
 import com.google.android.material.snackbar.Snackbar;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.Headers;
 
 public class DisplayUserRecipeActivity extends AppCompatActivity {
 
@@ -68,7 +54,7 @@ public class DisplayUserRecipeActivity extends AppCompatActivity {
         recipes = new ArrayList<>();
 
 
-        final RecipeAdapter2 recipeAdapter = new RecipeAdapter2(this, recipes, mUserId);
+        final UserRecipeAdapter recipeAdapter = new UserRecipeAdapter(this, recipes, mUserId);
 
         rmRecipe.setAdapter(recipeAdapter);
 

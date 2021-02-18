@@ -1,4 +1,4 @@
-package com.example.project_1_menu_maker;
+package com.example.project_1_menu_maker.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,21 +14,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.project_1_menu_maker.R;
+import com.example.project_1_menu_maker.UserDetailsActivity;
 import com.example.project_1_menu_maker.db.Recipes;
-import com.example.project_1_menu_maker.models.Recipe;
 
 import org.parceler.Parcels;
 
 import java.util.List;
 
-public class RecipeAdapter2 extends RecyclerView.Adapter<RecipeAdapter2.ViewHolder> {
+public class UserRecipeAdapter extends RecyclerView.Adapter<UserRecipeAdapter.ViewHolder> {
     private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
 
     Context context;
     List<Recipes> recipes;
     private int userId;
 
-    public RecipeAdapter2(Context context, List<Recipes> recipes, int userId){
+    public UserRecipeAdapter(Context context, List<Recipes> recipes, int userId){
         this.context = context;
         this.recipes = recipes;
         this.userId = userId;
@@ -36,14 +37,14 @@ public class RecipeAdapter2 extends RecyclerView.Adapter<RecipeAdapter2.ViewHold
 
     @NonNull
     @Override
-    public RecipeAdapter2.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public UserRecipeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.d("RecipeAdapter", "onCreateViewHolder");
         View recipeView = LayoutInflater.from(context).inflate(R.layout.item_recipe, parent, false);
         return new ViewHolder(recipeView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecipeAdapter2.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull UserRecipeAdapter.ViewHolder holder, int position) {
         Log.d("RecipeAdapter", "onBilndViewHolder " + position);
         Recipes recipe = recipes.get(position);
         holder.bind(recipe);
@@ -86,15 +87,9 @@ public class RecipeAdapter2 extends RecyclerView.Adapter<RecipeAdapter2.ViewHold
                 @Override
                 public void onClick(View v) {
 
-                    Intent intent = DisplayActivity2.intentFactory(context, userId, recipe);
+                    Intent intent = UserDetailsActivity.intentFactory(context, userId, recipe);
                     intent.putExtra("recipe", Parcels.wrap(recipe));
                     context.startActivity(intent);
-//                    Intent i = new Intent(context, DisplayActivity.class);
-//
-//                    i.putExtra(USER_ID_KEY, userId);
-
-//
-//                    context.startActivity(i);
 
                 }
             });
