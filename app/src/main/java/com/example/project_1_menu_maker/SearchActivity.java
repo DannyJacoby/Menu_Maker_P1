@@ -180,7 +180,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 recipes.clear();
-                Intent i = new Intent(SearchActivity.this, DetailsActivity.class);
+//                Intent i = new Intent(SearchActivity.this, DetailsActivity.class);
 
                 client.get(RANDOM_URL, new JsonHttpResponseHandler() {
                     @Override
@@ -191,7 +191,8 @@ public class SearchActivity extends AppCompatActivity {
                             JSONArray results = jsonObject.getJSONArray("meals");
                             Log.i(TAG, "Result: " + results.toString());
                             recipes.addAll(Recipe.fromJsonArray(results));
-                            i.putExtra("recipe", Parcels.wrap(recipes.get(0)));
+//                            i.putExtra("recipe", Parcels.wrap(recipes.get(0)));
+                            Intent i = DetailsActivity.intentFactory(getApplicationContext(), mUserId, recipes.get(0));
                             startActivity(i);
                         } catch (JSONException e) {
                             Log.e(TAG, "Hit json exception" + e);
