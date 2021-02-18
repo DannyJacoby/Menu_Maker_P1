@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase;
 
 import com.example.project_1_menu_maker.models.Recipe;
 
-@Database(entities = {User.class, Recipes.class}, version = 3, exportSchema = false)
+@Database(entities = {User.class, Recipes.class}, version = 6, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public static final String DB_NAME = "db-menu";

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.project_1_menu_maker.R;
 import com.example.project_1_menu_maker.db.AppDatabase;
@@ -22,10 +23,10 @@ import com.google.android.material.snackbar.Snackbar;
 public class HomeActivity extends AppCompatActivity {
 
     private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
-    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
+//    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
 
     private Button mSearchBtn;
-    private Button mDisplayBtn;
+    private Button mDisplayUserBtn;
     private Button mLogoutBtn;
 
     private User mUser;
@@ -33,6 +34,8 @@ public class HomeActivity extends AppCompatActivity {
     private UserDAO mUserDAO;
 
     private SharedPreferences mPreferences = null;
+
+    private TextView mWelcomeMsg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +53,14 @@ public class HomeActivity extends AppCompatActivity {
     private void wireUp(){
 
         mSearchBtn = findViewById(R.id.searchHomeBtn);
-        mDisplayBtn = findViewById(R.id.displayHomeBtn);
+        mDisplayUserBtn = findViewById(R.id.displayHomeBtn);
         mLogoutBtn = findViewById(R.id.logoutHomeBtn);
 
+        mWelcomeMsg = findViewById(R.id.welcomeMsgHomeActivity);
+
         checkForUser();
+
+        addUserToWelcome();
 
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,10 +71,11 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        mDisplayBtn.setOnClickListener(new View.OnClickListener() {
+        mDisplayUserBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = DisplayUserRecipeActivity.intentFactory(getApplicationContext(), mUserId);
+                startActivity(intent);
             }
         });
 
@@ -78,6 +86,10 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void addUserToWelcome(){
+        mWelcomeMsg.setText("Welcome to " + mUser.getUsername() + "'s Menu");
     }
 
     private void loginUser(int userId) { mUser = mUserDAO.getUserByUserId(userId); }
@@ -91,7 +103,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 clearUserFromIntent();
-                clearUserFromPref();
+//                clearUserFromPref();
                 mUserId = -1;
                 checkForUser();
             }
@@ -116,14 +128,16 @@ public class HomeActivity extends AppCompatActivity {
             loginUser(mUserId);
             return;
         }
-        if(mPreferences == null){
-            getPrefs();
-        }
-        mUserId = mPreferences.getInt(USER_ID_KEY, -1);
-        if(mUserId != -1){
-            loginUser(mUserId);
-            return;
-        }
+
+//        if(mPreferences == null){
+//            getPrefs();
+//        }
+//
+//        mUserId = mPreferences.getInt(USER_ID_KEY, -1);
+//        if(mUserId != -1){
+//            loginUser(mUserId);
+//            return;
+//        }
 
         Intent intent = MainActivity.intentFactory(this);
         startActivity(intent);
@@ -131,27 +145,27 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void snackMaker(String message){
-        Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutLoginActivity), message, Snackbar.LENGTH_SHORT);
+        Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutHomeActivity), message, Snackbar.LENGTH_SHORT);
         snackBar.show();
     }
 
-    private void getPrefs(){
-        mPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
-    }
+//    private void getPrefs(){
+//        mPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
+//    }
 
-    private void addUserToPreferences(int userId) {
-        if(mPreferences == null){
-            getPrefs();
-        }
-        SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putInt(USER_ID_KEY, userId);
-        //This might be needed?
-        editor.apply();
-    }
+//    private void addUserToPreferences(int userId) {
+//        if(mPreferences == null){
+//            getPrefs();
+//        }
+//        SharedPreferences.Editor editor = mPreferences.edit();
+//        editor.putInt(USER_ID_KEY, userId);
+//        //This might be needed?
+//        editor.apply();
+//    }
 
-    private void clearUserFromPref() {
-        addUserToPreferences(-1);
-    }
+//    private void clearUserFromPref() {
+//        addUserToPreferences(-1);
+//    }
 
     private void clearUserFromIntent() {
         getIntent().putExtra(USER_ID_KEY, -1);

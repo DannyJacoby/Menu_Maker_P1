@@ -21,7 +21,7 @@ import com.google.android.material.snackbar.Snackbar;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String USER_ID_KEY = "com.example.account.db.userIdKey";
-    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
+//    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
 
     private EditText mUsernameField;
     private String mUsernameString;
@@ -34,10 +34,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private Button button;
 
-    private SharedPreferences mPreferences;
-
-
-
+//    private SharedPreferences mPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void wireUp(){
-        getPrefs();
+//        getPrefs();
         mUsernameField = findViewById(R.id.usernameInput);
         mPasswordField = findViewById(R.id.passwordInput);
         button = findViewById(R.id.button);
@@ -60,9 +57,10 @@ public class LoginActivity extends AppCompatActivity {
             if(checkForUser()){ // user exists
                 if(validatePassword()){ // password is correct
                     // passing current user id to home activity, must be passed along to search and display activities when clicked from home
-                    addUserToPrefs(mUser.getUserId());
+//                    addUserToPrefs(mUser.getUserId());
                     Intent intent = HomeActivity.intentFactory(getApplicationContext(), mUser.getUserId() );
                     startActivity(intent);
+                    finish();
 
                 } else { // password is incorrect
                     snackMaker("Invalid Password");
@@ -107,16 +105,16 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-    private void getPrefs(){ mPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE); }
+//    private void getPrefs(){ mPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE); }
 
-    private void addUserToPrefs(int userId){
-        if(mPreferences == null){
-            getPrefs();
-        }
-        SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putInt(USER_ID_KEY, userId);
-        editor.apply();
-    }
+//    private void addUserToPrefs(int userId){
+//        if(mPreferences == null){
+//            getPrefs();
+//        }
+//        SharedPreferences.Editor editor = mPreferences.edit();
+//        editor.putInt(USER_ID_KEY, userId);
+//        editor.apply();
+//    }
 
     private boolean validatePassword(){ return mUser.getPassword().equals(mPasswordString); }
 
