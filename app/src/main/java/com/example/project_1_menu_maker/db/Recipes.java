@@ -2,9 +2,11 @@ package com.example.project_1_menu_maker.db;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import org.parceler.Parcel;
+import org.parceler.ParcelConstructor;
 
 import java.util.Objects;
 
@@ -14,17 +16,19 @@ public class Recipes {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
-    private int recipeId;
+    public int recipeId;
 
-    private int userId;
-    private int mealId;
-    private String title;
-    private String category;
-    private String mealThumb;
-    private String area;
-    private String ingredients;
-    private String instruction;
+    public int userId;
+    public int mealId;
+    public String title;
+    public String category;
+    public String mealThumb;
+    public String area;
+    public String ingredients;
+    public String instruction;
 
+    @Ignore
+    @ParcelConstructor
     public Recipes(){}
 
     public Recipes(int userId, int mealId, String title, String category, String mealThumb, String area, String ingredients, String instruction) {

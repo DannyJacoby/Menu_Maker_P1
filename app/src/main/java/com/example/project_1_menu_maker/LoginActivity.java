@@ -20,7 +20,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String USER_ID_KEY = "com.example.account.db.userIdKey";
+    private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
 //    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
 
     private EditText mUsernameField;
