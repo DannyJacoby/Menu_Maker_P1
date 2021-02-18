@@ -15,13 +15,15 @@ public class ExampleUnitTest {
     public void httpRequestSearchTest(){
         String BASE_URL = "https://www.themealdb.com/api/json/v1/1/search.php?s=";
 
-        assertEquals(5,5);
+        int expectedMealId = 5555;
+
+        assertEquals(5555, expectedMealId);
     }
 
     @Test
     public void httpRequestRandomTest(){
         String RANDOM_URL = "https://www.themealdb.com/api/json/v1/1/random.php/";
-
+        // ignore this test, stupid
         assertEquals(5,5);
     }
 

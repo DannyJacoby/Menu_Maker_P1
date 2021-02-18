@@ -77,17 +77,26 @@ public class SignupActivity extends AppCompatActivity {
         return (mUser == null);
     }
 
+    /**
+     * createUser
+     */
     private void createUser(){
         // maybe add something like "username needs x y z and/or password needs x y z"
         mUser = new User(mUsernameString, mPasswordString);
         mUserDAO.insert(mUser);
     }
 
+    /**
+     * getValuesFromDisplay
+     */
     private void getValuesFromDisplay(){
         mPasswordString = mPasswordField.getText().toString();
         mUsernameString = mUsernameField.getText().toString();
     }
 
+    /**
+     * getDatabase
+     */
     private void getDatabase(){
         mUserDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME)
                 .allowMainThreadQueries()
@@ -95,11 +104,20 @@ public class SignupActivity extends AppCompatActivity {
                 .getUserDAO();
     }
 
+    /**
+     * snackMaker
+     * @param message
+     */
     private void snackMaker(String message){
         Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutSignUpActivity), message, Snackbar.LENGTH_LONG);
         snackBar.show();
     }
 
+    /**
+     * intentFactory
+     * @param context
+     * @return
+     */
     public static Intent intentFactory(Context context){
         Intent intent = new Intent(context, SignupActivity.class);
         return intent;
