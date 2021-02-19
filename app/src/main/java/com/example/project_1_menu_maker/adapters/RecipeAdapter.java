@@ -29,6 +29,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     List<Recipe> recipes;
     private int userId;
 
+    /**
+     * RecipeAdapter Constructor
+     * @param context
+     * @param recipes
+     * @param userId
+     */
     public RecipeAdapter(Context context, List<Recipe> recipes, int userId){
         this.context = context;
         this.recipes = recipes;
@@ -73,7 +79,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             container = itemView.findViewById(R.id.container);
         }
 
-
+        /**
+         * bind function that bind recipe to the container
+         * and start DetailsActivity with specific recipe information
+         * @param recipe
+         */
         public void bind(final Recipe recipe) {
             tvTitle.setText(recipe.getTitle());
             tvCategory.setText(recipe.getCategory());

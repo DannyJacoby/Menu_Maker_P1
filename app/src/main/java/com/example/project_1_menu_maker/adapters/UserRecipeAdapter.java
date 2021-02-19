@@ -29,6 +29,12 @@ public class UserRecipeAdapter extends RecyclerView.Adapter<UserRecipeAdapter.Vi
     List<Recipes> recipes;
     private int userId;
 
+    /**
+     * UserRecipeAdapter constructor
+     * @param context
+     * @param recipes
+     * @param userId
+     */
     public UserRecipeAdapter(Context context, List<Recipes> recipes, int userId){
         this.context = context;
         this.recipes = recipes;
@@ -73,7 +79,11 @@ public class UserRecipeAdapter extends RecyclerView.Adapter<UserRecipeAdapter.Vi
             container = itemView.findViewById(R.id.container);
         }
 
-
+        /**
+         * Bind function that bind user recipe to container
+         * and start UserDetailsActivity with specific recipe information
+         * @param recipe
+         */
         public void bind(final Recipes recipe) {
             tvTitle.setText(recipe.getTitle());
             tvCategory.setText(recipe.getCategory());

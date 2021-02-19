@@ -234,6 +234,7 @@ public class SearchActivity extends AppCompatActivity {
 
     /**
      * buttonWireUp
+     * adding recipes from API to the recyclerview
      * @param client
      * @param recipeAdapter
      * @param button
