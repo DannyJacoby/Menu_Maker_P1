@@ -3,15 +3,20 @@ Daniel Jacoby , Won Kyu Jeong
 
 ## Description
 Menu maker is the app that users can search recipes and store the recipes in their database if they like.
+We used [TheMealDB](https://www.themealdb.com/) API for the recipe informations. 
 
 ## User Stories
 - [x] User can **create his/her account**
 - [x] User can **login with his/her account**
 - [x] User can **search recipe by its name**
-- [x] User can **find random recipe by clicking the random button**
 - [x] User can **can see the details of the recipe by clicking the item in recyclerview**
 - [x] User can **store the recipe by clicking the star button**
 - [x] User can **see their saved recipe in "Display my recipe"**
+
+The following ***optional features*** are implemented:
+- [x] User can **find random recipe by clicking the random button**
+- [x] User can **search recipes start with the specific letter by clicking each letter button**
+
 
 ## Video Walkthrough
 
