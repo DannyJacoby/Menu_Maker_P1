@@ -19,9 +19,7 @@ import com.example.project_1_menu_maker.db.User;
 import com.google.android.material.snackbar.Snackbar;
 
 public class LoginActivity extends AppCompatActivity {
-
     private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
-//    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
 
     private EditText mUsernameField;
     private String mUsernameString;
@@ -34,8 +32,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private Button button;
 
-//    private SharedPreferences mPreferences;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +43,10 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * wireUp
+     * Basic wire up function, wires up all text fields and buttons
+     */
     private void wireUp(){
 //        getPrefs();
         mUsernameField = findViewById(R.id.usernameInput);
@@ -57,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
             if(checkForUser()){ // user exists
                 if(validatePassword()){ // password is correct
                     // passing current user id to home activity, must be passed along to search and display activities when clicked from home
-//                    addUserToPrefs(mUser.getUserId());
                     Intent intent = HomeActivity.intentFactory(getApplicationContext(), mUser.getUserId() );
                     startActivity(intent);
                     finish();
@@ -89,11 +88,20 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * getValuesFromDisplay
+     * Does as functions says
+     */
     private void getValuesFromDisplay(){
         mPasswordString = mPasswordField.getText().toString();
         mUsernameString = mUsernameField.getText().toString();
     }
 
+    /**
+     * checkForUser
+     * @return
+     * Checks for user in DB
+     */
     private boolean checkForUser(){
         mUser = mUserDAO.getUserByUsername(mUsernameString);
 
@@ -105,17 +113,11 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-//    private void getPrefs(){ mPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE); }
-
-//    private void addUserToPrefs(int userId){
-//        if(mPreferences == null){
-//            getPrefs();
-//        }
-//        SharedPreferences.Editor editor = mPreferences.edit();
-//        editor.putInt(USER_ID_KEY, userId);
-//        editor.apply();
-//    }
-
+    /**
+     * validatePassword
+     * @return
+     * Does as function says
+     */
     private boolean validatePassword(){ return mUser.getPassword().equals(mPasswordString); }
 
     private void snackMaker(String message){
@@ -123,6 +125,10 @@ public class LoginActivity extends AppCompatActivity {
         snackBar.show();
     }
 
+    /**
+     * getDatabase
+     * Gets Database by DB name for User DB
+     */
     private void getDatabase(){
         mUserDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME)
                 .allowMainThreadQueries()
@@ -130,7 +136,12 @@ public class LoginActivity extends AppCompatActivity {
                 .getUserDAO();
     }
 
-    // to send the userId to the menu adder section so we can add recipes to an account db
+    /**
+     * intentFactory
+     * @param context
+     * @return
+     * Returns intent for this class
+     */
     public static Intent intentFactory(Context context){
         Intent intent = new Intent(context, LoginActivity.class);
         return intent;

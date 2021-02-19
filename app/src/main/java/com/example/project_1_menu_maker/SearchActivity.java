@@ -38,7 +38,6 @@ import okhttp3.Headers;
 public class SearchActivity extends AppCompatActivity {
 
     private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
-    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
     public static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/search.php?s=";
     public static final String RANDOM_URL = "https://www.themealdb.com/api/json/v1/1/random.php/";
     public static final String LETTER_URL = "https://www.themealdb.com/api/json/v1/1/search.php?f=";
@@ -53,22 +52,13 @@ public class SearchActivity extends AppCompatActivity {
 
     private int mUserId;
     private UserDAO mUserDAO;
-    private RecipeDAO mRecipeDAO;
-
-//    private SharedPreferences mPreferences = null;
-
-    private User mUser;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        Log.e("User ID Coming into Search", String.valueOf(getIntent().getIntExtra(USER_ID_KEY, -1)));
-
         checkForUser();
-        getDatabase();
 
         RecyclerView rmRecipes = findViewById(R.id.rvRecipes);
         recipes = new ArrayList<>();
@@ -109,6 +99,12 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * buttonWireUp
+     * @param recipeAdapter
+     * @param client
+     *
+     */
     private void buttonWireUp(RecipeAdapter recipeAdapter, AsyncHttpClient client){
 
         btSearch = findViewById(R.id.btSearch);
@@ -208,8 +204,6 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-
-
         buttonWireUp(client, recipeAdapter, btA, "A");
         buttonWireUp(client, recipeAdapter, btB, "B");
         buttonWireUp(client, recipeAdapter, btC, "C");
@@ -236,10 +230,16 @@ public class SearchActivity extends AppCompatActivity {
         buttonWireUp(client, recipeAdapter, btX, "X");
         buttonWireUp(client, recipeAdapter, btY, "Y");
         buttonWireUp(client, recipeAdapter, btZ, "Z");
-
-
     }
 
+    /**
+     * buttonWireUp
+     * @param client
+     * @param recipeAdapter
+     * @param button
+     * @param string
+     *
+     */
     private void buttonWireUp(AsyncHttpClient client, RecipeAdapter recipeAdapter, Button button, String string) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -273,17 +273,16 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * checkForUser
+     * Does as function says and checks for user in intent
+     */
     private void checkForUser() {
         mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
 
         if (mUserId != -1) {
             return;
         }
-
-//        if (mPreferences == null) {
-//            getPrefs();
-//        }
-//        mUserId = mPreferences.getInt(USER_ID_KEY, -1);
 
         if (mUserId != -1) {
             return;
@@ -292,51 +291,10 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
-    private void loginUser ( int userId){
-        mUser = mUserDAO.getUserByUserId(userId);
-    }
-
-    private void logoutUser () {
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-
-        alertBuilder.setMessage("Logout?");
-
-        alertBuilder.setPositiveButton("Yes", (dialog, which) -> {
-            clearUserFromIntent();
-//            clearUserFromPrefs();
-            mUserId = -1;
-            checkForUser();
-        });
-
-        alertBuilder.setNegativeButton("No", (dialog, which) -> {
-            //Don't need to do anything here
-            snackMaker("You clicked NO");
-        });
-
-        alertBuilder.create().show();
-    }
-
-//    private void getPrefs () {
-//        mPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
-//    }
-//
-//    private void addUserToPrefs ( int userId){
-//        if (mPreferences == null) {
-//            getPrefs();
-//        }
-//        SharedPreferences.Editor editor = mPreferences.edit();
-//        editor.putInt(USER_ID_KEY, userId);
-//        editor.apply();
-//    }
-
-//    private void clearUserFromPrefs () {
-//        addUserToPrefs(-1);
-//    }
-
-    private void clearUserFromIntent () {
-        getIntent().putExtra(USER_ID_KEY, -1);
-    }
-
+    /**
+     * snackMaker
+     * @param message
+     */
     private void snackMaker (String message){
         Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutSearchActivity),
                 message,
@@ -344,10 +302,12 @@ public class SearchActivity extends AppCompatActivity {
         snackBar.show();
     }
 
-    private void getDatabase () {
-        mUserDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME).allowMainThreadQueries().build().getUserDAO();
-    }
-
+    /**
+     * intentFactory
+     * @param context
+     * @param userId
+     * @return
+     */
     public static Intent intentFactory (Context context, int userId){
         Intent intent = new Intent(context, SearchActivity.class);
         intent.putExtra(USER_ID_KEY, userId);

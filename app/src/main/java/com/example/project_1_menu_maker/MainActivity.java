@@ -22,18 +22,12 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
-//    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
 
     private Button btLogin;
     private Button btSignUp;
 
-//    private User mUser;
     private UserDAO mUserDAO;
     private int mUserId = -1;
-
-//    private RecipeDAO mRecipeDAO;
-
-    private SharedPreferences mPreferences = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         getDatabase();
-//        getPrefs();
         checkForUser();
 
         btLogin = findViewById(R.id.btLogin);
@@ -61,15 +54,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * checkForUser
+     * unwraps user id from intent, if no user is in intent then we add in default users
+     */
     private void checkForUser(){
         mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
 
         if(mUserId != -1){ return; }
-
-//        if(mPreferences == null){ getPrefs(); }
-//        mUserId = mPreferences.getInt(USER_ID_KEY, -1);
-//
-//        if(mUserId != -1){ return; }
 
         List<User> users = mUserDAO.getAllUsers();
 
@@ -80,43 +72,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    private void loginUser(int userId) { mUser = mUserDAO.getUserByUserId(userId); }
-
-//    private void logoutUser(){
-//        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-//
-//        alertBuilder.setMessage("Logout?");
-//
-//        alertBuilder.setPositiveButton("Yes", (dialog, which) -> {
-//            clearUserFromIntent();
-//            clearUserFromPrefs();
-//            mUserId = -1;
-//            checkForUser();
-//        });
-//
-//        alertBuilder.setNegativeButton("No", (dialog, which) -> {
-//            //Don't need to do anything here
-//            snackMaker("You clicked NO");
-//        });
-//
-//        alertBuilder.create().show();
-//    }
-
-//    private void getPrefs(){ mPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE); }
-
-//    private void addUserToPrefs(int userId){
-//        if(mPreferences == null){
-//            getPrefs();
-//        }
-//        SharedPreferences.Editor editor = mPreferences.edit();
-//        editor.putInt(USER_ID_KEY, userId);
-//        editor.apply();
-//    }
-
-//    private void clearUserFromPrefs(){ addUserToPrefs(-1); }
-//
-//    private void clearUserFromIntent(){ getIntent().putExtra(USER_ID_KEY, -1); }
-
+    /**
+     * snackMaker
+     * @param message
+     * Makes short snack for this activity
+     */
     private void snackMaker(String message){
         Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutActivityMain),
                 message,
@@ -124,10 +84,20 @@ public class MainActivity extends AppCompatActivity {
         snackBar.show();
     }
 
+    /**
+     * getDatabase
+     * Does as function states, but only grabs user DB
+     */
     private void getDatabase(){
         mUserDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME).allowMainThreadQueries().build().getUserDAO();
     }
 
+    /**
+     * intentFactory
+     * @param context
+     * @return
+     * Returns intent directed towards this class
+     */
     public static Intent intentFactory(Context context){
         Intent intent = new Intent(context, MainActivity.class);
         return intent;

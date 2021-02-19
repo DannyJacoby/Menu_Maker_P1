@@ -26,7 +26,6 @@ import java.util.List;
 
 public class UserDetailsActivity extends AppCompatActivity {
     private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
-//    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
 
     TextView tvMealTitle;
     ImageView ivImage;
@@ -60,7 +59,10 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     }
 
-
+    /**
+     * wireUp
+     * Basic wire up functions, wires up all fields and buttons as well as unwraps recipe from intent
+     */
     private void wireUp(){
         myRecipes = Parcels.unwrap(getIntent().getParcelableExtra("recipe"));
         mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
@@ -76,7 +78,6 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         //set this with the "hasBeenSaved" variable (set that with a checkForRecipeInDB call or smth)
         mFavoriteBtn.setImageResource(android.R.drawable.btn_star_big_off);
-
 
         mFavoriteBtn.setOnClickListener(v -> {
             if(!hasBeenSaved) {
@@ -96,6 +97,10 @@ public class UserDetailsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * loginUser
+     * Does as function says and unwraps userId from intent
+     */
     private void loginUser(){
         mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
         if(mUserId == -1){
@@ -103,14 +108,27 @@ public class UserDetailsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * addRecipeToUser
+     * Inserts recipe
+     */
     private void addRecipeToUser(){
         mRecipeDAO.insert(myRecipes);
     }
 
+    /**
+     * deleteRecipeFromUser
+     * Deletes user and mealId specific recipe
+     */
     private void deleteRecipeFromUser(){
         mRecipeDAO.deleteUserSpecificRecipeInDB(mUserId, myRecipes.getMealId());
     }
 
+    /**
+     * checkForRecipeInDB
+     * @return
+     * Returns true/false depending on if recipe is already in DB for this user
+     */
     private boolean checkForRecipeInDB(){
         // use mRecipe and mUserId to check through DB
         List<Recipes> myRecipeA = mRecipeDAO.getAllUserRecipes(mUserId);
@@ -122,6 +140,10 @@ public class UserDetailsActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * loadRecipe
+     * Loads recipe into global variable, also loads it into activity
+     */
     private void loadRecipe(){
         myRecipes = Parcels.unwrap(getIntent().getParcelableExtra("recipe"));
         if(myRecipes == null){
@@ -145,11 +167,20 @@ public class UserDetailsActivity extends AppCompatActivity {
         tvInstruction.setText(myRecipes.getInstruction());
     }
 
+    /**
+     * snackMaker
+     * @param message
+     * Makes short snack based on message
+     */
     private void snackMaker(String message){
         Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutDisplayActivity), message, Snackbar.LENGTH_SHORT);
         snackBar.show();
     }
 
+    /**
+     * getDatabase
+     * Gets User and Recipe DB
+     */
     private void getDatabase(){
         mRecipeDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME)
                 .allowMainThreadQueries()
@@ -162,6 +193,14 @@ public class UserDetailsActivity extends AppCompatActivity {
                 .getUserDAO();
     }
 
+    /**
+     * intentFactory
+     * @param context
+     * @param userId
+     * @param recipe
+     * @return
+     * Gets intent directed at this class and wraps returned intent with userId and recipe
+     */
     public static Intent intentFactory(Context context, int userId, Recipes recipe){
         Intent intent = new Intent(context, UserDetailsActivity.class);
         intent.putExtra(USER_ID_KEY, userId);
