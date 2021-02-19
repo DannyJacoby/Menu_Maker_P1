@@ -26,7 +26,6 @@ import java.util.List;
 
 public class DetailsActivity extends AppCompatActivity {
     private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
-//    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
 
     TextView tvMealTitle;
     ImageView ivImage;
@@ -60,7 +59,10 @@ public class DetailsActivity extends AppCompatActivity {
 
     }
 
-
+    /**
+     * wireUp
+     * Basic function to wire up buttons and text fields
+     */
     private void wireUp(){
         mRecipe = Parcels.unwrap(getIntent().getParcelableExtra("recipe"));
         mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
@@ -96,6 +98,10 @@ public class DetailsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * loginUser
+     * Login user by unwrapping userId from intent
+     */
     private void loginUser(){
         mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
         if(mUserId == -1){
@@ -103,14 +109,27 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * addRecipeToUser
+     * Does as function says
+     */
     private void addRecipeToUser(){
         mRecipeDAO.insert(myRecipes);
     }
 
+    /**
+     * deleteRecipeFromUser
+     * Does as function says
+     */
     private void deleteRecipeFromUser(){
         mRecipeDAO.deleteUserSpecificRecipeInDB(mUserId, mRecipe.getMealId());
     }
 
+    /**
+     * checkForRecipeInDB
+     * @return
+     * Grabs all recipes in DB related to UserId, then checks to see if our current recipe is already in the DB for this user
+     */
     private boolean checkForRecipeInDB(){
         // use mRecipe and mUserId to check through DB
         List<Recipes> myRecipes = mRecipeDAO.getAllUserRecipes(mUserId);
@@ -122,6 +141,12 @@ public class DetailsActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * loadRecipe
+     * Unwraps the recipe from the intent (JSON), then runs checkForRecipeInDB,
+     * then creates a new recipe based on this recipe (JSON -> Table) and loads it
+     * it into the activity
+     */
     private void loadRecipe(){
         mRecipe = Parcels.unwrap(getIntent().getParcelableExtra("recipe"));
         if(mRecipe == null){
@@ -149,11 +174,20 @@ public class DetailsActivity extends AppCompatActivity {
         tvInstruction.setText(mRecipe.getInstruction());
     }
 
+    /**
+     * snackMaker
+     * @param message
+     * Takes String, puts out long snack of String
+     */
     private void snackMaker(String message){
         Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutDisplayActivity), message, Snackbar.LENGTH_SHORT);
         snackBar.show();
     }
 
+    /**
+     * getDatabase
+     * Gets database by the name DB_NAME in AppDatabase.class for the RecipeDB and the UserDB
+     */
     private void getDatabase(){
         mRecipeDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME)
                 .allowMainThreadQueries()
@@ -166,6 +200,14 @@ public class DetailsActivity extends AppCompatActivity {
                 .getUserDAO();
     }
 
+    /**
+     *
+     * @param context
+     * @param userId
+     * @param recipe
+     * @return
+     * Takes in userId and Recipe, wraps both into intent and returns an intent to this activity
+     */
     public static Intent intentFactory(Context context, int userId, Recipe recipe){
         Intent intent = new Intent(context, DetailsActivity.class);
         intent.putExtra(USER_ID_KEY, userId);

@@ -35,8 +35,6 @@ public class DisplayUserRecipeActivity extends AppCompatActivity {
 
     private Button mHomeBtn;
 
-    // note, use mRecipeDAO.getAllUserRecipes(mUserId); to get a List<Recipes> that then you can iterate through
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,10 +62,12 @@ public class DisplayUserRecipeActivity extends AppCompatActivity {
 
         recipeAdapter.notifyDataSetChanged();
 
-
-
     }
 
+    /**
+     * wireUp
+     * Basic wireUp function to wire up all buttons
+     */
     private void wireUp(){
         mHomeBtn = findViewById(R.id.homeBtnDisplayUser);
         mHomeBtn.setOnClickListener(v -> {
@@ -77,10 +77,19 @@ public class DisplayUserRecipeActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * loginUser
+     * @param userId
+     * Login user by grabbing them from the DB
+     */
     private void loginUser(int userId) {
         mUser = mUserDAO.getUserByUserId(userId);
     }
 
+    /**
+     * checkForUser
+     * Checks for userId in intent, if it's there we call loginUser else we go to mainActivity
+     */
     private void checkForUser(){
         mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
 
@@ -88,14 +97,6 @@ public class DisplayUserRecipeActivity extends AppCompatActivity {
             loginUser(mUserId);
             return;
         }
-//        if(mPreferences == null){
-//            getPrefs();
-//        }
-//        mUserId = mPreferences.getInt(USER_ID_KEY, -1);
-//        if(mUserId != -1){
-//            loginUser(mUserId);
-//            return;
-//        }
 
         snackMaker("Error, no user logged in");
         Intent intent = MainActivity.intentFactory(this);
@@ -103,13 +104,20 @@ public class DisplayUserRecipeActivity extends AppCompatActivity {
 
     }
 
-
-
+    /**
+     * snackMaker
+     * @param message
+     * Takes in String, creates short snack with String
+     */
     private void snackMaker(String message){
         Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutDisplayUserActivity), message, Snackbar.LENGTH_SHORT);
         snackBar.show();
     }
 
+    /**
+     * getDatabase
+     * Gets database by the name DB_NAME in AppDatabase.class for User and Recipe DBs
+     */
     private void getDatabase(){
         mUserDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME)
                 .allowMainThreadQueries()
@@ -122,6 +130,13 @@ public class DisplayUserRecipeActivity extends AppCompatActivity {
                 .getRecipeDAO();
     }
 
+    /**
+     * intentFactory
+     * @param context
+     * @param userId
+     * @return
+     * Takes in userId and wraps it into the intent, returns intent to this class
+     */
     public static Intent intentFactory(Context context, int userId){
         Intent intent = new Intent(context, DisplayUserRecipeActivity.class);
         intent.putExtra(USER_ID_KEY, userId);

@@ -23,7 +23,6 @@ import com.google.android.material.snackbar.Snackbar;
 public class HomeActivity extends AppCompatActivity {
 
     private static final String USER_ID_KEY = "com.example.project_1_menu_maker.db.userIdKey";
-//    private static final String PREFERENCES_KEY = "com.example.project_1_menu_maker.db.PREFERENCES_KEY";
 
     private Button mSearchBtn;
     private Button mDisplayUserBtn;
@@ -50,6 +49,10 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * wireUp
+     * Basic wire up function that wires up all buttons
+     */
     private void wireUp(){
 
         mSearchBtn = findViewById(R.id.searchHomeBtn);
@@ -88,12 +91,25 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * addUserToWelcome
+     * Adds username to welcome message
+     */
     private void addUserToWelcome(){
         mWelcomeMsg.setText("Welcome to " + mUser.getUsername() + "'s Menu");
     }
 
+    /**
+     * loginUser
+     * @param userId
+     * Does as function says, grabs user from DB
+     */
     private void loginUser(int userId) { mUser = mUserDAO.getUserByUserId(userId); }
 
+    /**
+     * logoutUser
+     * removes user from intent using an alert dialog
+     */
     private void logoutUser(){
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
 
@@ -119,63 +135,57 @@ public class HomeActivity extends AppCompatActivity {
         alertBuilder.create().show();
     }
 
+    /**
+     * checkForUser
+     * Checks for user in intent, and then logs them in. Otherwise will send back to mainActivity
+     */
     private void checkForUser(){
         mUserId = getIntent().getIntExtra(USER_ID_KEY, -1);
 
-        // taken from GymLog
-        // do we have a user in preferences?
         if(mUserId != -1){
             loginUser(mUserId);
             return;
         }
-
-//        if(mPreferences == null){
-//            getPrefs();
-//        }
-//
-//        mUserId = mPreferences.getInt(USER_ID_KEY, -1);
-//        if(mUserId != -1){
-//            loginUser(mUserId);
-//            return;
-//        }
 
         Intent intent = MainActivity.intentFactory(this);
         startActivity(intent);
 
     }
 
+    /**
+     * snackMaker
+     * @param message
+     * Makes a snack with variable message string for short time
+     */
     private void snackMaker(String message){
         Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutHomeActivity), message, Snackbar.LENGTH_SHORT);
         snackBar.show();
     }
 
-//    private void getPrefs(){
-//        mPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
-//    }
-
-//    private void addUserToPreferences(int userId) {
-//        if(mPreferences == null){
-//            getPrefs();
-//        }
-//        SharedPreferences.Editor editor = mPreferences.edit();
-//        editor.putInt(USER_ID_KEY, userId);
-//        //This might be needed?
-//        editor.apply();
-//    }
-
-//    private void clearUserFromPref() {
-//        addUserToPreferences(-1);
-//    }
-
+    /**
+     * clearUserFromIntent
+     * Does as function says
+     */
     private void clearUserFromIntent() {
         getIntent().putExtra(USER_ID_KEY, -1);
     }
 
+    /**
+     * getDatabase
+     * Gets user DB
+     */
     private void getDatabase(){
         mUserDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME).allowMainThreadQueries().build().getUserDAO();
 
     }
 
+    /**
+     * intentFactory
+     * @param context
+     * @param userId
+     * @return
+     * Wraps userId into intent directed towards this class
+     */
     public static Intent intentFactory(Context context, int userId){
         Intent intent = new Intent(context, HomeActivity.class);
         intent.putExtra(USER_ID_KEY, userId);

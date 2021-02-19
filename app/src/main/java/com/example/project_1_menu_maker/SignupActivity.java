@@ -39,6 +39,10 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * wireUp
+     * Basic function to wire up buttons and text fields
+     */
     private void wireUp(){
         mUsernameField = findViewById(R.id.usernameInput);
         mPasswordField = findViewById(R.id.passwordInput);
@@ -72,6 +76,11 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * checkForUser
+     * @return
+     * Checks if a user already exists in the DB, else returns false
+     */
     private boolean checkForUser(){
         mUser = mUserDAO.getUserByUsername(mUsernameString);
         return (mUser == null);
@@ -79,6 +88,7 @@ public class SignupActivity extends AppCompatActivity {
 
     /**
      * createUser
+     * Creates user and inserts it into the DB
      */
     private void createUser(){
         // maybe add something like "username needs x y z and/or password needs x y z"
@@ -96,6 +106,7 @@ public class SignupActivity extends AppCompatActivity {
 
     /**
      * getDatabase
+     * Gets database by the name DB_NAME in AppDatabase.class
      */
     private void getDatabase(){
         mUserDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DB_NAME)
@@ -107,6 +118,7 @@ public class SignupActivity extends AppCompatActivity {
     /**
      * snackMaker
      * @param message
+     * Takes String, puts out long snack of String
      */
     private void snackMaker(String message){
         Snackbar snackBar = Snackbar.make(findViewById(R.id.layoutSignUpActivity), message, Snackbar.LENGTH_LONG);
@@ -117,6 +129,7 @@ public class SignupActivity extends AppCompatActivity {
      * intentFactory
      * @param context
      * @return
+     * Generates intent from this activity
      */
     public static Intent intentFactory(Context context){
         Intent intent = new Intent(context, SignupActivity.class);
