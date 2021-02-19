@@ -1,10 +1,10 @@
 # Meal Planner
 Daniel Jacoby , Won Kyu Jeong
 
-##Description
+## Description
 Menu maker is the app that users can search recipes and store the recipes in their database if they like.
 
-##User Stories
+## User Stories
 - [x] User can **create his/her account**
 - [x] User can **login with his/her account**
 - [x] User can **search recipe by its name**
