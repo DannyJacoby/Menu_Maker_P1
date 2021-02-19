@@ -10,7 +10,7 @@ Menu maker is the app that users can search recipes and store the recipes in the
 - [x] User can **search recipe by its name**
 - [x] User can **find random recipe by clicking the random button**
 - [x] User can **can see the details of the recipe by clicking the item in recyclerview**
-- [x] User can **store the recipe by clicking the star button*
+- [x] User can **store the recipe by clicking the star button**
 - [x] User can **see their saved recipe in "Display my recipe"**
 
 ## Video Walkthrough
